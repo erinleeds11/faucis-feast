@@ -21,10 +21,10 @@ class User(db.Model):
     user_id = db.Column(db.Integer,
                         autoincrement= True,
                         primary_key = True)
-    fname = db.Column(db.String(15))
-    lname = db.Column(db.String(20))
-    email = db.Column(db.String(30), unique = True)
-    password = db.Column(db.String(20))
+    fname = db.Column(db.String)
+    lname = db.Column(db.String)
+    email = db.Column(db.String, unique = True)
+    password = db.Column(db.String)
 
     rating = db.relationship('Rating')
 
@@ -36,11 +36,11 @@ class Rating(db.Model):
 
     __tablename__ = "ratings"
 
-    ratings_id = db.Column(db.Integer,
+    rating_id = db.Column(db.Integer,
                         autoincrement= True,
                         primary_key = True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    google_id = db.Column(db.Integer, unique = True)
+    restaurant_id = db.Column(db.String, unique = False)
     cleanliness_score = db.Column(db.Integer)
     masks_score = db.Column(db.Integer)
     distancing_score = db.Column(db.Integer)
@@ -50,7 +50,7 @@ class Rating(db.Model):
     user = db.relationship('User')
 
     def __repr__(self):
-        return f'<User user_id={self.user_id} email={self.email}>'
+        return f'<User rating_id={self.rating_id}>'
 
     
 
