@@ -1,42 +1,16 @@
 {% extends 'base.html' %}
-{% block title %}Movie Ratings Home{% endblock %}
+
+{% block title %} Welcome {% endblock %}
 
 {% block body %}
-  <h1>Fauci's Feast</h1>
-  <h2>Rate your local restaurants on COVID Readiness</h2>
+  <!-- Mount your react components on to this element. -->
+  <div id="root"></div>
+  <div id = "container"></div>
+{% endblock %}
 
-  <div class = "create_account">
-    <h2>Create an Account</h2>
-    <form>
-        <p>
-        First Name <input type="password" name="fname">
-        </p>
-        <p>
-        Last Name <input type="password" name="password">
-        </p>
-        <p>
-        Email: <input type="text" name="email">
-        </p>
-        <p>
-        Password: <input type="password" name="password">
-        </p>
-        <p>
-        <input type="submit">
-        </p>
-    </form>
-    </div>
+{% block js %}
+    <script src="/static/js/homepage.jsx" type="text/jsx"></script>
+    <script src = "/static/js/login.jsx" type = "text/jsx"></script>
+{% endblock %}
 
-    <div class = "direct_to_login">
-        <form action = '/login'>
-        <h2>Already have an account? <span> <button>Log in</button></span></h2>
-        </form>
-    </div>
-
-    <div class = "continue_as_guest">
-        <form action = '/location_search'>
-        <p>Or <span><button>Continue as guest</button></span></p>
-        </form>
-        
-
-{% endblock %} -->
   

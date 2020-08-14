@@ -20,4 +20,8 @@ def create_rating(user_id, restaurant_id, cleanliness_score, masks_score, distan
 
     return rating
 
+def get_user_by_email(email):
+
+    return User.query.filter(User.email == email).first()
+
 
