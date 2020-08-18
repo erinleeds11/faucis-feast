@@ -16,7 +16,8 @@ os.system('createdb ratings')
 model.connect_to_db(server.app)
 model.db.create_all()
 
-restaurants = get_restaurants_by_latlong()
+
+restaurants = get_restaurants_by_latlong(37.773972, 122.431297)
 restaurant_ids = []
 for restaurant in restaurants:
     restaurant_ids.append(restaurant)
@@ -32,6 +33,7 @@ for i in range(10):
     user = create_user(fname, lname, email, password)
     user_ids.append(user.user_id)
 
+
 ratings = []
 for i in range(100):
     user_id = choice(user_ids)
@@ -44,7 +46,7 @@ for i in range(100):
     rating = create_rating(user_id, restaurant_id, cleanliness_score, masks_score, distancing_score, outdoor_seating, comments)
     ratings.append(rating)
 
-    
+
 for rating in ratings:
     id = rating.restaurant_id
     name = restaurants[id]['name']

@@ -9,16 +9,15 @@ import requests
 from get_key import get_key
 
 API_KEY = get_key()
-#Define Client
-gmaps = googlemaps.Client(key = API_KEY)
+# loop through each of the places in the results, and get the place details.    
+def get_restaurants_by_latlong(lat, long):  
+    gmaps = googlemaps.Client(key = API_KEY)
 
 # Do a simple nearby search where we specify the location
-places_result  = gmaps.places_nearby(location='37.773972, -122.431297', radius = 40000, type = 'restaurant')
+    places_result  = gmaps.places_nearby(location = (lat, long), radius = 40000, type = 'restaurant')
 
-stored_results = {}
+    stored_results = {}
 
-# loop through each of the places in the results, and get the place details.    
-def get_restaurants_by_latlong():  
     for place in places_result['results']:
 
         my_place_id = place['place_id']
@@ -31,15 +30,14 @@ def get_restaurants_by_latlong():
         stored_results[my_place_id] = places_details['result']
 
     return stored_results
-
     
 
 # print(stored_results)
 
 #prints by name
-stored_results = get_restaurants_by_latlong()
-for ID in stored_results:
-    print(f" ID: {ID}, Name: {stored_results[ID]['name']},   Address: {stored_results[ID]['vicinity']}")
+# stored_results = get_restaurants_by_latlong()
+# for ID in stored_results:
+#     print(f" ID: {ID}, Name: {stored_results[ID]['name']},   Address: {stored_results[ID]['vicinity']}")
 
     
 

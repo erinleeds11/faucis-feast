@@ -6,7 +6,6 @@ const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
 //protected routes
 
-
 function Homepage() {
     return <div></div>
 }
@@ -59,7 +58,7 @@ function CreateAccount(props) {
 function Login() {
     const [email, setLoginEmail] = React.useState("");
     const [password, setLoginPassword] = React.useState("");
-
+    const [loggedIn, setLoggedIn] = React.useState(false)
     const userLogin = () => {
         const user_login = {"email": email, "password": password}
         fetch('/api/login', {
@@ -76,9 +75,15 @@ function Login() {
                 alert('Incorred email')
             } else if (data === "Password not found")  {
                 alert('Incorrect Password!')
-            } else {alert("Logged in successfully")}
-            })
-        }
+            } else {alert("Logged in successfully") 
+            setLoggedIn(true)}
+    
+        })
+    }
+    if (loggedIn===true) {
+        return <Redirect to='/location-search'/>
+    }
+    
     return (
     <div>
         <h2>Log in</h2> 
@@ -89,22 +94,56 @@ function Login() {
     );
 }
 
-function Geocode() {
-    const [latitude, setLatitude] = React.useState("")
-    const [longitude, setLongitude] = React.useState("")
-    const [address, setAddress] = React.useState("")
+function Geocoder() {
+    const [address, setAddress] = React.useState("");
+    const [latitude, setLat] = React.useState(0);
+    const [longitude, setLong] = React.useState(0);
 
-    const updateCoordinates = (e) => {
-        e.preventDefault()
-        const encodedAddress = encodeURI(address)
+    const getCoords = () => {
+        let latLong = []
+        const address_info = {"address": address};
+        fetch('/api/get_latlong', {
+            method: 'POST', 
+            body: JSON.stringify(address_info),
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          })
+        .then(response => response.json())
+            .then(data => {
+            if (data) {
+                // console.log(data)
+                console.log(data["results"][0]["geometry"]["location"]["lat"]);
+                setLat(data["results"][0]["geometry"]["location"]["lat"]);
+                setLong(data["results"][0]["geometry"]["location"]["lng"]);
+        }})
+    }
+
+    console.log(latitude);
+    console.log(longitude);
 
     return (
-        <div>
-            Enter location <input type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
-            <button onClick = {(e) => updateCoordinates(e)}>Enter</button>
+            <React.Fragment>
+                <div>
+                Enter location <input type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
+                <button onClick = {getCoords}>Enter</button>
+                </div>
+                <MapView lat={latitude} long={longitude}/>
+            </React.Fragment>
+    );
+}
+
+function MapView(props) {
+    console.log(props);
+    return (
+        <div className="MapView">
+            <p>lat: {props.lat}</p>
+            <p>long: {props.long} </p>
         </div>
     );
 }
+
+
 
 function App() { 
     //make state in app set it to true
@@ -132,7 +171,7 @@ function App() {
                         <CreateAccount/>
                     </Route>
                     <Route path="/location-search">
-                        <Geocode/>
+                        <Geocoder/>
                     </Route>
                     <Route path="/login">
                         <Login/>
