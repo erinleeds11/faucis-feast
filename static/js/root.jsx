@@ -188,7 +188,7 @@ function MapView(props) {
         const onLoad = () => setMap(new window.google.maps.Map(ref.current, options))
         if (!window.google) {
             const script = document.createElement("script");
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDe3tmNZ8EkOE0JLGAJKwlHtHRZL1qKlDY"
+            // script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDe3tmNZ8EkOE0JLGAJKwlHtHRZL1qKlDY"
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
