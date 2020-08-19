@@ -64,17 +64,19 @@ def get_lat_long():
     data = res.json()
     latitude = data["results"][0]["geometry"]["location"]["lat"]
     longitude = data["results"][0]["geometry"]["location"]["lng"]
-    get_restaurants_objs(latitude, longitude)
+    # get_restaurants_objs(latitude, longitude)
     return data
 
 @app.route('/api/get-restaurants', methods = ['POST'])
-def get_restaurants_objs(latitude, longitude):
+def get_restaurants_objs():
     "Return a json array of restaurant objects to front end"
-    rest_objs = get_restaurants_by_latlong(latitude, longitude)
+    data = request.get_json()
+    print("Restaurant response from React", data)
+    rest_objs = get_restaurants_by_latlong(data["latitude"], data["longitude"])
     for ID in rest_objs:
         print(f" ID: {ID}, Name: {rest_objs[ID]['name']},   Address: {rest_objs[ID]['vicinity']}")
     return jsonify(rest_objs)
-    
+
 if __name__ == '__main__':
     connect_to_db(app)
     app.run(host='0.0.0.0', debug=True)

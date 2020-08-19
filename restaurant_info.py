@@ -10,7 +10,8 @@ from get_key import get_key
 
 API_KEY = get_key()
 # loop through each of the places in the results, and get the place details.    
-def get_restaurants_by_latlong(lat, long):  
+def get_restaurants_by_latlong(lat = 37.7749 , long=-122.4194):  
+    #37.7749, -122.4194
     gmaps = googlemaps.Client(key = API_KEY)
 
 # Do a simple nearby search where we specify the location
@@ -31,8 +32,6 @@ def get_restaurants_by_latlong(lat, long):
 
     return stored_results
     
-
-# print(stored_results)
 
 #prints by name
 # stored_results = get_restaurants_by_latlong()

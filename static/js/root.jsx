@@ -4,10 +4,12 @@ const Link =  ReactRouterDOM.Link;
 const Prompt =  ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
+
 //protected routes
 
 function Homepage() {
-    return <div></div>
+    return <div>
+    </div>
 }
 function CreateAccount(props) {
 
@@ -83,7 +85,7 @@ function Login() {
     if (loggedIn===true) {
         return <Redirect to='/location-search'/>
     }
-    
+
     return (
     <div>
         <h2>Log in</h2> 
@@ -113,9 +115,8 @@ function Geocoder() {
             .then(data => {
             if (data) {
                 // console.log(data)
-                console.log(data["results"][0]["geometry"]["location"]["lat"]);
                 setLat(data["results"][0]["geometry"]["location"]["lat"]);
-                setLong(data["results"][0]["geometry"]["location"]["lng"]);
+                setLong(data["results"][0]["geometry"]["location"]["lng"]);`                                ¸ÆÆ`
         }})
     }
 
@@ -128,22 +129,80 @@ function Geocoder() {
                 Enter location <input type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
                 <button onClick = {getCoords}>Enter</button>
                 </div>
-                <MapView lat={latitude} long={longitude}/>
+                <MapView options={{center: {lat: latitude, lng: longitude}, zoom: 11}}/>
+                <Restaurants lat={latitude} long={longitude}/>
             </React.Fragment>
     );
 }
 
+function Restaurants(props) {
+    console.log("Restaurant props", props);
+    const coordinates = {"latitude": props.lat, "longitude": props.long};
+    const [restaurants, setRestaurants] = React.useState([]);
+    
+    React.useEffect(() => {
+        fetch('/api/get-restaurants', {
+            method: 'POST',
+            body: JSON.stringify(coordinates),
+            headers: {
+                'Content-Type': 'application/json'
+                },
+        })
+        .then(response => response.json())
+            .then(data => {
+                const rest_array = []
+                console.log("In effect");
+                for (const item in data) {
+                    console.log(data[item]["name"]);
+                    rest_array.push(
+                        <div className = "restaurantContainer">
+                        <ul>
+                            <li><h3>Name: {data[item]["name"]}</h3></li>
+                            <li>Address: {data[item]["vicinity"]}</li>
+                            <li>Website: {data[item]["website"]}</li>
+                        </ul>
+                        </div>
+                    );
+                }
+                console.log(restaurants);
+                console.log("rest array:", {rest_array})
+                setRestaurants(rest_array);
+                })
+      }, [props.lat, props.long])
+            return (
+                <React.Fragment>
+                    <div>{restaurants}</div>
+                </React.Fragment>
+                
+            );
+     }
+    
+
 function MapView(props) {
-    console.log(props);
+    const options = props.options;
+    console.log("Map props", props);
+    const [map, setMap] = React.useState();
+    const ref = React.useRef();
+
+    React.useEffect(()=> {
+        const onLoad = () => setMap(new window.google.maps.Map(ref.current, options))
+        if (!window.google) {
+            const script = document.createElement("script");
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDe3tmNZ8EkOE0JLGAJKwlHtHRZL1qKlDY"
+            document.head.append(script);
+            script.addEventListener("load", onLoad)
+            return () => script.removeEventListener("load", onLoad)
+        } else onLoad();
+        }, [props.options])
+
+
     return (
-        <div className="MapView">
-            <p>lat: {props.lat}</p>
-            <p>long: {props.long} </p>
+        <div 
+            style={{ height: `60vh`, margin: `1em 0`, borderRadius: `0.5em` }}
+            {...{ref}}>
         </div>
     );
 }
-
-
 
 function App() { 
     //make state in app set it to true
@@ -151,6 +210,8 @@ function App() {
         <Router>
             <div>
                 <nav>
+                    <h1>Fauci's Feast</h1>
+                    <h3>Rate your local restaurants on Covid-19 Readiness</h3>
                     <ul>
                         <li>
                             <Link to="/"> Home </Link>

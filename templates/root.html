@@ -5,15 +5,24 @@
   <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
   <script src='https://unpkg.com/react-router@5.2.0/umd/react-router.min.js'></script> 
   <script src='https://unpkg.com/react-router-dom@5.2.0/umd/react-router-dom.min.js'></script> 
-
-    <h1>Fauci's Feast</h1>
-    <h3>Rate your local restaurants on Covid Readiness</h3>
+  <head>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+    
+       html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
   <div id = "root"></div>
   
-  
   <script src="/static/js/root.jsx" type="text/jsx"></script>
-
-  
 
 </html>
 
