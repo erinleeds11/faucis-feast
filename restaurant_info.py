@@ -32,6 +32,13 @@ def get_restaurants_by_latlong(lat = 37.7749 , long=-122.4194):
 
     return stored_results
     
+def get_restaurant_by_id(ID):
+    gmaps = googlemaps.Client(key = API_KEY)
+    my_fields = ['name','formatted_phone_number','website', 'photo', 'opening_hours', 'rating', 'vicinity',]
+    places_details  = gmaps.place(place_id= ID , fields= my_fields)
+    return places_details['result']
+
+
 
 #prints by name
 # stored_results = get_restaurants_by_latlong()

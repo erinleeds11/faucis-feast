@@ -116,7 +116,7 @@ function Geocoder() {
             if (data) {
                 // console.log(data)
                 setLat(data["results"][0]["geometry"]["location"]["lat"]);
-                setLong(data["results"][0]["geometry"]["location"]["lng"]);`                                ¸ÆÆ`
+                setLong(data["results"][0]["geometry"]["location"]["lng"]);                 
         }})
     }
 
@@ -136,10 +136,14 @@ function Geocoder() {
 }
 
 function Restaurants(props) {
+    const history = ReactRouterDOM.useHistory()
+
     console.log("Restaurant props", props);
     const coordinates = {"latitude": props.lat, "longitude": props.long};
     const [restaurants, setRestaurants] = React.useState([]);
-    
+    const redirectRest = () => {
+        return <Redirect to="/restaurant-page"/>
+    }
     React.useEffect(() => {
         fetch('/api/get-restaurants', {
             method: 'POST',
@@ -152,14 +156,17 @@ function Restaurants(props) {
             .then(data => {
                 const rest_array = []
                 console.log("In effect");
-                for (const item in data) {
-                    console.log(data[item]["name"]);
+                for (const ID in data) {
+                    console.log("Want to pass this", ID)
+                    console.log(data[ID]["name"]);
                     rest_array.push(
                         <div className = "restaurantContainer">
                         <ul>
-                            <li><h3>Name: {data[item]["name"]}</h3></li>
-                            <li>Address: {data[item]["vicinity"]}</li>
-                            <li>Website: {data[item]["website"]}</li>
+                            <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> Name: {data[ID]["name"]}</h3></button>
+                            <li>Address: {data[ID]["vicinity"]}</li>
+                            <li>Website: <a href = {data[ID]["website"]}/></li>
+                            {/* <img src = {data[item].photos[0].photo_reference}/> */}
+                    
                         </ul>
                         </div>
                     );
@@ -173,10 +180,57 @@ function Restaurants(props) {
                 <React.Fragment>
                     <div>{restaurants}</div>
                 </React.Fragment>
-                
+
             );
      }
-    
+
+function RestaurantDetails() {
+    const [name, setName] = React.useState("")
+    const [website, setWebsite] = React.useState("")
+    const [vicinity, setVicinity] = React.useState("")
+    const [hours, setHours] = React.useState([])
+    const [googleRating, setGoogleRating] = React.useState(0)
+
+    let { ID } = ReactRouterDOM.useParams();
+    fetch(`/api/restaurants/${ID}`, {
+        method: 'POST',
+        body: JSON.stringify(ID),
+        headers: {
+            'Content-Type': 'application/json'
+            },
+    })
+    .then(response => response.json())
+        .then(data => {
+            setName(data["name"]);
+            setWebsite(data["website"]);
+            setVicinity(data["vicinity"]);
+            setHours(data["hours"]);
+            setGoogleRating(data["rating"])
+    });
+
+
+    return (
+        <div className = "restaurant_details">
+            <h1 id = "rest_name">{name}</h1>
+            <p>Website: {website}</p>
+            <p>Address: {vicinity}</p>
+            <p>Hours: {hours}</p>
+            <p>Google Rating: {googleRating}</p>
+            <button onClick ={()=>{return <ReadRatings/>}}>Read ratings</button>
+            <button>Rate this restaurant</button>
+        </div>
+    );
+}
+function showRatings(props) {
+    restID = props.restID
+
+}
+
+function ReadRatings() {
+    return (
+        <div>Ratings here!!</div>
+    )
+}
 
 function MapView(props) {
     const options = props.options;
@@ -188,13 +242,12 @@ function MapView(props) {
         const onLoad = () => setMap(new window.google.maps.Map(ref.current, options))
         if (!window.google) {
             const script = document.createElement("script");
-            // script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDe3tmNZ8EkOE0JLGAJKwlHtHRZL1qKlDY"
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDe3tmNZ8EkOE0JLGAJKwlHtHRZL1qKlDY"
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
         } else onLoad();
         }, [props.options])
-
 
     return (
         <div 
@@ -241,6 +294,9 @@ function App() {
                         <Homepage/>
                     </Route>
                 </Switch>
+                <Route path="/restaurants/:ID">
+                        <RestaurantDetails />
+                </Route>
             </div>
         </Router>
     );
