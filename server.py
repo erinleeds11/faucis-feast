@@ -48,13 +48,13 @@ def login():
     user = crud.get_user_by_email(email) 
     
     if not user.email:
+        print("Username not found")
         return jsonify("Username not found")
     elif password != user.password:
        return jsonify("Password not found")
     else:
-        print(user)
-        session["current_user"] = user.user_id
-        return jsonify("sucess")
+        print(user.user_id)
+        return jsonify(user.user_id)
 
 @app.route("/api/get_latlong", methods = ['POST'] ) 
 def get_lat_long():
@@ -126,7 +126,21 @@ def create_fake_ratings():
     print("list_of_dicts", list_of_dicts)
     return jsonify(list_of_dicts)
         
-# @app.route('/api/create-ratings', methods = ['POST'])
+@app.route('/api/create-rating', methods = ['POST'])
+def user_created_rating():
+    rating_info = request.get_json()
+    print(rating_info["outdoorSeating"])
+    rating_created = crud.create_rating(rating_info["userID"], 
+                       rating_info["restaurantID"],
+                       int(rating_info["cleanlinessScore"]),
+                       int(rating_info["masksScore"]),
+                       int(rating_info["distancingScore"]),
+                       bool(rating_info["outdoorSeating"].title()),
+                       rating_info["comments"],
+                        )
+    print(rating_created)
+    return jsonify("success")
+    #create_rating(user_id, restaurant_id, cleanliness_score, masks_score, distancing_score, outdoor_seating, comments):
 
 
 if __name__ == '__main__':

@@ -65,6 +65,7 @@ function Login() {
     const [email, setLoginEmail] = React.useState("");
     const [password, setLoginPassword] = React.useState("");
     const [loggedIn, setLoggedIn] = React.useState(false)
+    const [dataSet, setData] = React.useState("");
     const userLogin = () => {
         const user_login = {"email": email, "password": password}
         fetch('/api/login', {
@@ -77,17 +78,24 @@ function Login() {
           })
           .then(response => response.json())
             .then(data => {
+                console.log("Returned", data)
             if (data === 'Username not found') {
-                alert('Incorred email')
+                alert('Incorrect email')
             } else if (data === "Password not found")  {
                 alert('Incorrect Password!')
-            } else {alert("Logged in successfully") 
-            setLoggedIn(true)}
-    
+            } else {
+                alert("Logged in successfully") 
+                setData(data);
+                setLoggedIn(true);}
+
+     
         })
     }
     if (loggedIn===true) {
-        return <Redirect to='/location-search'/>
+        console.log("dataSet", dataSet);
+        localStorage.setItem('userID', dataSet);
+        // console.log("local", localStorage.getItem('userID'));
+        return <Redirect to='/restaurant-search'/>
     }
 
     return (
@@ -231,7 +239,7 @@ function RestaurantDetails() {
             <p>Hours: {hours}</p>
             <p>Google Rating: {googleRating}</p>
             <button onClick  = {()=>{setRateRest(true)}}>Rate this restaurant</button>
-            <WriteReview/>
+            <WriteReview restaurantID = {ID}/>
             <button onClick = {()=>{setRateRest(false)}}>Back to reviews</button>
         
         </div>
@@ -271,9 +279,9 @@ function ShowRatings(props) {
                 for (const rating of data) {
                     console.log(i);
                     i=i+1;
-                    console.log("rating", rating)
-                    console.log(rating["user"])
-                    console.log("User", rating.rating_id); 
+                    // console.log("rating", rating)
+                    // console.log(rating["user"])
+                    // console.log("User", rating.rating_id); 
                     let outdoors;
                     if (rating[1]["scores"][3] === "true") {
                          outdoors = "Yes";
@@ -303,13 +311,55 @@ function ShowRatings(props) {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function WriteReview() {
+function WriteReview(props) {
+    // const history = ReactRouterDOM.useHistory();
+    const [cleanliness, setCleanliness] = React.useState("");
+    const [masks, setMasks] = React.useState("");
+    const [distancing, setDistancing] = React.useState("");
+    const [outdoors, setOutdoors] = React.useState();
+    const [comments, setComments] = React.useState("");
+    const [posted, setPosted] = React.useState()
 
+
+    console.log(cleanliness);
+    console.log(masks);
+    console.log(distancing);
+    console.log(outdoors);
+    console.log(comments);
+    
+  
+    const handleSubmit = (evt) => {
+        evt.preventDefault();
+        const singleRating = {"userID": localStorage.getItem("userID"),
+                            "restaurantID": props.restaurantID, 
+                            "cleanlinessScore": cleanliness,
+                            "masksScore": masks,
+                            "distancingScore": distancing,
+                            "outdoorSeating": outdoors,
+                            "comments": comments}  
+        fetch('/api/create-rating', {
+            method: 'POST',
+            body: JSON.stringify(singleRating),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data === "success") {
+                alert("Posted")
+                setPosted(true)
+            }
+        })
+    }
+
+    if (localStorage.getItem("userID")) {
     return (
+
         <div>
             <h2>Write a review!</h2>
-            <form>
-                <div id = "cleanliness">
+            <form onSubmit = {handleSubmit}>
+                <div id = "cleanliness" value = {cleanliness} onChange = {e => setCleanliness(e.target.value)}>
                     Cleanliness:
                     <select name="cleanliness">
                         <option value="1">1</option>
@@ -320,7 +370,7 @@ function WriteReview() {
                     </select>
                 </div>
 
-                <div id = "masks">
+                <div id = "masks" value = {masks} onChange = {e => setMasks(e.target.value)}>
                     Masks:
                     <select name="masks">
                         <option value="1">1</option>
@@ -331,7 +381,7 @@ function WriteReview() {
                     </select>
                 </div>
 
-                <div id = "distancing">
+                <div id = "distancing" value = {distancing} onChange = {e => setDistancing(e.target.value)}>
                     Social Distancing Enforced:
                     <select name="masks">
                         <option value="1">1</option>
@@ -341,22 +391,30 @@ function WriteReview() {
                         <option value="5">5</option>
                     </select>
                 </div>
-                <div id="outdoors">
+                <div id="outdoors" value = {outdoors} onChange = {e => setOutdoors(e.target.value)}>
                     Outdoor seating:
-                    <input type ="radio" name="outdoors" value="yes"/>Yes
-                    <input type ="radio" name="outdoors" value="no"/>No
+                    <input type ="radio" name="outdoors" value = {true}/>Yes
+                    <input type ="radio" name="outdoors" value = {false}/>No
                 </div>
 
-                <div id="comments">
+                <div id="comments" value = {comments} onChange = {e => setComments(e.target.value)}>
                     Comments:
                     <input type="textarea" name="comments"></input>
                 </div>
-                
+            
+            <button type="submit">Post Rating</button>
+            
             </form>
 
         </div>
     )
 
+} else if (posted === true){
+    return <div></div>
+} else {
+    alert("User not logged in")
+    return <div></div>
+}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -388,6 +446,10 @@ function MapView(props) {
 
 function App() { 
     //make state in app set it to true
+    const handleLogout = () => {
+        localStorage.removeItem("userID");
+        alert("Logged out successfully");
+    }
     return (
         <Router>
             <div>
@@ -405,7 +467,10 @@ function App() {
                             <Link to="/login"> Log in </Link>
                         </li>
                         <li>
-                            <Link to="/location-search">Location Search</Link>
+                            <Link to="/restaurant-search">Restaurant Search</Link>
+                        </li>
+                        <li>
+                            <Link to="/" onClick ={handleLogout}>Logout</Link>
                         </li>
                     </ul>
                 </nav>
@@ -413,7 +478,7 @@ function App() {
                     <Route path="/signup">
                         <CreateAccount/>
                     </Route>
-                    <Route path="/location-search">
+                    <Route path="/restaurant-search">
                         <Geocoder/>
                     </Route>
                     <Route path="/login">
