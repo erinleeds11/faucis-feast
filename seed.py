@@ -21,7 +21,6 @@ restaurants = get_restaurants_by_latlong(37.773972, 122.431297)
 restaurant_ids = []
 for restaurant in restaurants:
     restaurant_ids.append(restaurant)
-
 faker = Faker('en_US')
 user_ids = []
 for i in range(10):
@@ -32,6 +31,7 @@ for i in range(10):
     #print(fname, lname, email, password)
     user = create_user(fname, lname, email, password)
     user_ids.append(user.user_id)
+print(user_ids)
 
 
 ratings = []

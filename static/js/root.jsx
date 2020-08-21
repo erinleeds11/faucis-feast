@@ -11,6 +11,8 @@ function Homepage() {
     return <div>
     </div>
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function CreateAccount(props) {
 
     const [fname, setFirstName] = React.useState("");
@@ -57,6 +59,8 @@ function CreateAccount(props) {
     );
     
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function Login() {
     const [email, setLoginEmail] = React.useState("");
     const [password, setLoginPassword] = React.useState("");
@@ -95,6 +99,7 @@ function Login() {
     </div>
     );
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function Geocoder() {
     const [address, setAddress] = React.useState("");
@@ -134,6 +139,7 @@ function Geocoder() {
             </React.Fragment>
     );
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function Restaurants(props) {
     const history = ReactRouterDOM.useHistory()
@@ -184,14 +190,21 @@ function Restaurants(props) {
             );
      }
 
-function RestaurantDetails() {
-    const [name, setName] = React.useState("")
-    const [website, setWebsite] = React.useState("")
-    const [vicinity, setVicinity] = React.useState("")
-    const [hours, setHours] = React.useState([])
-    const [googleRating, setGoogleRating] = React.useState(0)
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function RestaurantDetails() {
+    const [name, setName] = React.useState("");
+    const [website, setWebsite] = React.useState("");
+    const [vicinity, setVicinity] = React.useState("");
+    const [hours, setHours] = React.useState([]);
+    const [googleRating, setGoogleRating] = React.useState(0);
+    const [passID, setPassID] = React.useState("")
+    const [rateRest, setRateRest] = React.useState();
     let { ID } = ReactRouterDOM.useParams();
+    const rateIt =() => {
+        setRateRest(true);
+    }
+    React.useEffect(()=> {
     fetch(`/api/restaurants/${ID}`, {
         method: 'POST',
         body: JSON.stringify(ID),
@@ -207,8 +220,9 @@ function RestaurantDetails() {
             setHours(data["hours"]);
             setGoogleRating(data["rating"])
     });
+}, [])
 
-
+    if (rateRest === true ) {
     return (
         <div className = "restaurant_details">
             <h1 id = "rest_name">{name}</h1>
@@ -216,21 +230,135 @@ function RestaurantDetails() {
             <p>Address: {vicinity}</p>
             <p>Hours: {hours}</p>
             <p>Google Rating: {googleRating}</p>
-            <button onClick ={()=>{return <ReadRatings/>}}>Read ratings</button>
-            <button>Rate this restaurant</button>
+            <button onClick  = {()=>{setRateRest(true)}}>Rate this restaurant</button>
+            <WriteReview/>
+            <button onClick = {()=>{setRateRest(false)}}>Back to reviews</button>
+        
         </div>
     );
-}
-function showRatings(props) {
-    restID = props.restID
-
-}
-
-function ReadRatings() {
+    } else {
     return (
-        <div>Ratings here!!</div>
-    )
+        <div className = "restaurant_details">
+            <h1 id = "rest_name">{name}</h1>
+            <p>Website: {website}</p>
+            <p>Address: {vicinity}</p>
+            <p>Hours: {hours}</p>
+            <p>Google Rating: {googleRating}</p>
+            <button onClick  = {rateIt}>Rate this restaurant</button>
+            <div className = "rest_ratings"><ShowRatings restID={ID}/></div>
+        
+        </div>);
+    }
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function ShowRatings(props) {
+    const restaurantID = {"restID": props.restID};
+    const [ratingsList, setRatingsList] = React.useState([]);
+    React.useEffect(()=> {
+        fetch('/api/get-ratings', {
+            method: 'POST',
+            body: JSON.stringify(restaurantID),
+            headers: {
+                'Content-Type': 'application/json'
+                },
+        })
+        .then(response => response.json())
+            .then(data => {
+                const ratings_array = []
+                console.log(data)
+                let i =0;
+                for (const rating of data) {
+                    console.log(i);
+                    i=i+1;
+                    console.log("rating", rating)
+                    console.log(rating["user"])
+                    console.log("User", rating.rating_id); 
+                    let outdoors;
+                    if (rating[1]["scores"][3] === "true") {
+                         outdoors = "Yes";
+                    } else {
+                         outdoors = "No";
+                    }
+                    ratings_array.push(
+                    <div key={i}>
+                        <h3>User: {rating[0]["user"][0]} {rating[0]["user"][1]}</h3>
+                        <p>Cleanliness: {rating[1]["scores"][0]}</p>
+                        <p>Masks: {rating[1]["scores"][1]}</p>
+                        <p>Social Distancing Enforced: {rating[1]["scores"][2]} </p>
+                        <p>Outdoor Seating: {outdoors} </p>
+                        <p>Comments: {rating[1]["scores"][4]}</p>
+                    </div>
+                    );
+                }
+                setRatingsList(ratings_array);
+
+        });
+
+    }, [props.restID])
+
+    return(
+    <div>{ratingsList}</div>);
+
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function WriteReview() {
+
+    return (
+        <div>
+            <h2>Write a review!</h2>
+            <form>
+                <div id = "cleanliness">
+                    Cleanliness:
+                    <select name="cleanliness">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+
+                <div id = "masks">
+                    Masks:
+                    <select name="masks">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+
+                <div id = "distancing">
+                    Social Distancing Enforced:
+                    <select name="masks">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div id="outdoors">
+                    Outdoor seating:
+                    <input type ="radio" name="outdoors" value="yes"/>Yes
+                    <input type ="radio" name="outdoors" value="no"/>No
+                </div>
+
+                <div id="comments">
+                    Comments:
+                    <input type="textarea" name="comments"></input>
+                </div>
+                
+            </form>
+
+        </div>
+    )
+
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function MapView(props) {
     const options = props.options;
@@ -256,6 +384,7 @@ function MapView(props) {
         </div>
     );
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function App() { 
     //make state in app set it to true

@@ -24,4 +24,10 @@ def get_user_by_email(email):
 
     return User.query.filter(User.email == email).first()
 
+def all_users():
 
+    return User.query.all()
+
+def filter_by_restID(ID):
+
+    return Rating.query.filter(Rating.restaurant_id == ID).all()
