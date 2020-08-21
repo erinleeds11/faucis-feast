@@ -208,6 +208,7 @@ function RestaurantDetails() {
     const [googleRating, setGoogleRating] = React.useState(0);
     const [passID, setPassID] = React.useState("")
     const [rateRest, setRateRest] = React.useState();
+    const [photo, setPhoto] = React.useState("")
     let { ID } = ReactRouterDOM.useParams();
     const rateIt =() => {
         setRateRest(true);
@@ -227,6 +228,7 @@ function RestaurantDetails() {
             setVicinity(data["vicinity"]);
             setHours(data["hours"]);
             setGoogleRating(data["rating"])
+            setPhoto(data["photos"][0]["photo_reference"])
     });
 }, [])
 
@@ -234,6 +236,7 @@ function RestaurantDetails() {
     return (
         <div className = "restaurant_details">
             <h1 id = "rest_name">{name}</h1>
+            <Photo photoRef = {photo}/>
             <p>Website: {website}</p>
             <p>Address: {vicinity}</p>
             <p>Hours: {hours}</p>
@@ -248,6 +251,7 @@ function RestaurantDetails() {
     return (
         <div className = "restaurant_details">
             <h1 id = "rest_name">{name}</h1>
+            <Photo photoRef = {photo}/>
             <p>Website: {website}</p>
             <p>Address: {vicinity}</p>
             <p>Hours: {hours}</p>
@@ -257,6 +261,28 @@ function RestaurantDetails() {
         
         </div>);
     }
+}
+function Photo(props) {
+    const [photo, setPhoto] = React.useState();
+    const photoRef = props.photoRef;
+    const photoReference = {"photoRef": photoRef};
+    fetch('/api/rest-img', {
+        method: 'POST', 
+        body: JSON.stringify(photoReference),
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(response => response.json())
+        .then(data => {
+            setPhoto(data)
+
+    })
+
+    return (
+        <img src={photo}/>
+    )
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

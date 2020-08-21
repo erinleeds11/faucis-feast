@@ -99,6 +99,16 @@ def create_random_ratings(restaurant_id):
     for i in range(10):
         crud.create_rating(choice(user_ids), restaurant_id, randint(1,5), randint(1,5), randint(1,5), choice(bools), "blahblah")
 
+@app.route('/api/rest-img', methods = ['POST'])
+def get_photo():
+    data = request.get_json()
+    photo_ref = data["photoRef"]
+    key = get_key()
+    URL = "https://maps.googleapis.com/maps/api/place/photo"
+    PARAMS = {'key':key,'photoreference': photo_ref, "maxwidth": 400}
+    res = requests.get(url = URL, params = PARAMS)
+    
+    return res
 
 @app.route('/api/get-ratings', methods = ['POST'])
 def create_fake_ratings():
