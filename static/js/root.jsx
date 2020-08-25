@@ -4,7 +4,6 @@ const Link =  ReactRouterDOM.Link;
 const Prompt =  ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
-
 //protected routes
 
 function Homepage() {
@@ -78,7 +77,6 @@ function Login() {
           })
           .then(response => response.json())
             .then(data => {
-                console.log("Returned", data)
             if (data === 'Username not found') {
                 alert('Incorrect email')
             } else if (data === "Password not found")  {
@@ -92,7 +90,7 @@ function Login() {
         })
     }
     if (loggedIn===true) {
-        console.log("dataSet", dataSet);
+        // console.log("dataSet", dataSet);
         localStorage.setItem('userID', dataSet);
         // console.log("local", localStorage.getItem('userID'));
         return <Redirect to='/restaurant-search'/>
@@ -110,9 +108,11 @@ function Login() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function Geocoder() {
+    const [map, setMap] = React.useState();
     const [address, setAddress] = React.useState("");
     const [latitude, setLat] = React.useState(0);
     const [longitude, setLong] = React.useState(0);
+
 
     const getCoords = () => {
         let latLong = []
@@ -133,8 +133,9 @@ function Geocoder() {
         }})
     }
 
-    console.log(latitude);
-    console.log(longitude);
+    // console.log(latitude);
+    // console.log(longitude);
+    
 
     return (
             <React.Fragment>
@@ -142,8 +143,13 @@ function Geocoder() {
                 Enter location <input type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
                 <button onClick = {getCoords}>Enter</button>
                 </div>
-                <MapView options={{center: {lat: latitude, lng: longitude}, zoom: 11}}/>
-                <Restaurants lat={latitude} long={longitude}/>
+                <MapView map={map} 
+                    options={{center: {lat: latitude, lng: longitude}, zoom: 11}}
+                    setMap = {setMap}
+                />
+                <Restaurants map={map}
+                    lat={latitude} 
+                    long={longitude}/>
             </React.Fragment>
     );
 }
@@ -151,13 +157,12 @@ function Geocoder() {
 
 function Restaurants(props) {
     const history = ReactRouterDOM.useHistory()
-
-    console.log("Restaurant props", props);
     const coordinates = {"latitude": props.lat, "longitude": props.long};
     const [restaurants, setRestaurants] = React.useState([]);
-    const redirectRest = () => {
-        return <Redirect to="/restaurant-page"/>
-    }
+    const [restData, setRestData] = React.useState(false);
+    const [markers, setMarkers] = React.useState([]);
+    console.log(restaurants);
+    console.log(restData);
     React.useEffect(() => {
         fetch('/api/get-restaurants', {
             method: 'POST',
@@ -167,35 +172,89 @@ function Restaurants(props) {
                 },
         })
         .then(response => response.json())
-            .then(data => {
-                const rest_array = []
-                console.log("In effect");
-                for (const ID in data) {
-                    console.log("Want to pass this", ID)
-                    console.log(data[ID]["name"]);
-                    rest_array.push(
-                        <div className = "restaurantContainer">
-                        <ul>
-                            <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> Name: {data[ID]["name"]}</h3></button>
-                            <li>Address: {data[ID]["vicinity"]}</li>
-                            <li>Website: <a href = {data[ID]["website"]}/></li>
-                            {/* <img src = {data[item].photos[0].photo_reference}/> */}
-                    
-                        </ul>
-                        </div>
-                    );
-                }
-                console.log(restaurants);
-                console.log("rest array:", {rest_array})
-                setRestaurants(rest_array);
-                })
+        .then(data => {
+            // console.log(data);
+            setMarkers([]);
+            setRestData(data); 
+            const rest_array = []
+            let index = 1;
+            for (const ID in data) {
+                rest_array.push(
+                    <div className = "restaurantContainer">
+                    <ul>
+                        <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {data[ID]["name"]}</h3></button>
+                        <li>Address: {data[ID]["vicinity"]}</li>
+                        <li>Website: <a href = {data[ID]["website"]}/></li>
+                        {/* <img src = {data[item].photos[0].photo_reference}/> */}
+                
+                    </ul>
+                    </div>
+                );
+                index +=1;
+            }
+            setRestaurants(rest_array);
+            })
+        
       }, [props.lat, props.long])
-            return (
-                <React.Fragment>
-                    <div>{restaurants}</div>
-                </React.Fragment>
+    //   console.log("restData", restData)
+    console.log("rest Data", restData);
 
-            );
+    // if ((Object.keys(restData).length > 0) && (restaurants.length===0)) {
+    //     const rest_array = [];
+    //     console.log("hi");
+    //     for (const ID in restData) {
+    //         console.log(ID);
+    //         rest_array.push(
+    //             <div className = "restaurantContainer">
+    //             <ul>
+    //                 <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> Name: {restData[ID]["name"]}</h3></button>
+    //                 <li>Address: {restData[ID]["vicinity"]}</li>
+    //                 <li>Website: <a href = {restData[ID]["website"]}/></li>
+    //                 {/* <img src = {data[item].photos[0].photo_reference}/> */}
+            
+    //             </ul>
+    //             </div>
+    //         );
+    //     }
+    //     setRestaurants(rest_array);
+    //     console.log("rest array", rest_array)
+    //   }
+
+    console.log("markers", markers);
+    console.log("restairants", restaurants);
+    for (const data in restData) {
+        console.log("lat", restData[data]["geometry"]["location"]["lat"])
+        console.log("lat", restData[data]["geometry"]["location"]["lng"])
+
+    }
+
+    if ((markers.length === 0) && (restaurants.length>0)) {
+        let index = 1;
+        for (const ID in restData) {
+        //     setMarkers(new window.google.maps.Marker({map:props.map, position: {lat: restData[ID]["geometry"]["location"]["lat"], 
+        //     lng:restData[ID]["geometry"]["location"]["lng"]},
+        //     title: restData[ID]["name"],
+        //     link: "www.google.com",
+        // }))
+            const current_marker = new window.google.maps.Marker({map:props.map, position: {lat: restData[ID]["geometry"]["location"]["lat"], 
+                lng:restData[ID]["geometry"]["location"]["lng"]},
+                title: restData[ID]["name"],
+                link: "www.google.com",
+                label: index.toString(),
+            })
+            current_marker.addListener("click", () => {history.push(`/restaurants/${ID}`)});
+            setMarkers(current_marker);
+
+            index +=1;
+    }}
+
+    console.log(restaurants.length)
+    return (
+        <React.Fragment>
+            <div>{restaurants}</div>
+        </React.Fragment>
+
+    );
      }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -232,6 +291,7 @@ function RestaurantDetails() {
     });
 }, [])
 
+    // console.log("photo refernce", photo)
     if (rateRest === true ) {
     return (
         <div className = "restaurant_details">
@@ -240,7 +300,7 @@ function RestaurantDetails() {
             <p>Website: {website}</p>
             <p>Address: {vicinity}</p>
             <p>Hours: {hours}</p>
-            <p>Google Rating: {googleRating}</p>
+            <p>Google Rating: {googleRating}/5</p>
             <button onClick  = {()=>{setRateRest(true)}}>Rate this restaurant</button>
             <WriteReview restaurantID = {ID}/>
             <button onClick = {()=>{setRateRest(false)}}>Back to reviews</button>
@@ -255,7 +315,7 @@ function RestaurantDetails() {
             <p>Website: {website}</p>
             <p>Address: {vicinity}</p>
             <p>Hours: {hours}</p>
-            <p>Google Rating: {googleRating}</p>
+            <p>Google Rating: {googleRating}/5</p>
             <button onClick  = {rateIt}>Rate this restaurant</button>
             <div className = "rest_ratings"><ShowRatings restID={ID}/></div>
         
@@ -263,12 +323,13 @@ function RestaurantDetails() {
     }
 }
 function Photo(props) {
+    console.log(props.photoRef)
     const [photo, setPhoto] = React.useState();
-    const photoRef = props.photoRef;
-    const photoReference = {"photoRef": photoRef};
+    // const photoRef = props.photoRef;
+    React.useEffect(() => {
     fetch('/api/rest-img', {
         method: 'POST', 
-        body: JSON.stringify(photoReference),
+        body: JSON.stringify(props.photoRef),
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
@@ -276,19 +337,30 @@ function Photo(props) {
       })
       .then(response => response.json())
         .then(data => {
-            setPhoto(data)
+            setPhoto("data")
+            console.log("DATA", data)
 
     })
-
+}, [props.photoRef])
+    
     return (
-        <img src={photo}/>
+        <div>
+            <p>image??</p>
+            <img src='/myImage.jpg'></img>
+            </div>
+    
+    
     )
 }
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function ShowRatings(props) {
     const restaurantID = {"restID": props.restID};
     const [ratingsList, setRatingsList] = React.useState([]);
+    const [dataLength, setDataLength] = React.useState(0);
+    let [ratingsSum, setRatingsSum] = React.useState(0);
     React.useEffect(()=> {
         fetch('/api/get-ratings', {
             method: 'POST',
@@ -302,6 +374,12 @@ function ShowRatings(props) {
                 const ratings_array = []
                 console.log(data)
                 let i =0;
+
+                // setDataLength(data.length);
+                console.log("Data Length", data.length)
+                const length = data.length;
+                setDataLength(length)
+                let sumRate =0;
                 for (const rating of data) {
                     console.log(i);
                     i=i+1;
@@ -309,11 +387,13 @@ function ShowRatings(props) {
                     // console.log(rating["user"])
                     // console.log("User", rating.rating_id); 
                     let outdoors;
-                    if (rating[1]["scores"][3] === "true") {
+                    if (rating[1]["scores"][3] == true) {
                          outdoors = "Yes";
                     } else {
                          outdoors = "No";
                     }
+                    sumRate += rating[1]["scores"][0] + rating[1]["scores"][1] + rating[1]["scores"][2];
+                    setRatingsSum(sumRate/3)
                     ratings_array.push(
                     <div key={i}>
                         <h3>User: {rating[0]["user"][0]} {rating[0]["user"][1]}</h3>
@@ -326,13 +406,18 @@ function ShowRatings(props) {
                     );
                 }
                 setRatingsList(ratings_array);
+                
 
         });
 
     }, [props.restID])
 
     return(
-    <div>{ratingsList}</div>);
+    <div>
+        <p>Average COVID-19 Readiness Rating: {(ratingsSum/dataLength).toFixed(2)}</p>
+        <div>{ratingsList}</div>
+        
+    </div>);
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -345,13 +430,14 @@ function WriteReview(props) {
     const [outdoors, setOutdoors] = React.useState();
     const [comments, setComments] = React.useState("");
     const [posted, setPosted] = React.useState()
+     
 
 
-    console.log(cleanliness);
-    console.log(masks);
-    console.log(distancing);
-    console.log(outdoors);
-    console.log(comments);
+    // console.log(cleanliness);
+    // console.log(masks);
+    // console.log(distancing);
+    // console.log(outdoors);
+    // console.log(comments);
     
   
     const handleSubmit = (evt) => {
@@ -444,22 +530,38 @@ function WriteReview(props) {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 function MapView(props) {
     const options = props.options;
-    console.log("Map props", props);
-    const [map, setMap] = React.useState();
+    // console.log("Map props", props);
+    const [marker, setMarker] = React.useState();
     const ref = React.useRef();
-
+    // console.log("options center", options["center"]);
     React.useEffect(()=> {
-        const onLoad = () => setMap(new window.google.maps.Map(ref.current, options))
+        const onLoad = () => {
+            props.setMap(new window.google.maps.Map(ref.current, options));
+            setMarker(new window.google.maps.Marker({map:props.map, position: options["center"]}))
+        }
+
         if (!window.google) {
             const script = document.createElement("script");
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDe3tmNZ8EkOE0JLGAJKwlHtHRZL1qKlDY"
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDzz_uHnsxuVF8hIb7HkR3auXgw9TlfPho"
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
-        } else onLoad();
-        }, [props.options])
+        } else {
+            onLoad();
+            // addMarkers(map, options["center"])
+        }
+
+        }, [props.options.center.lat, props.options.center.lng])
+
+    function addMarkers(map, coords) {
+        console.log("does this even get cllaed")
+        const marker = new window.google.maps.Marker({
+            map:map,
+            position: coords,
+    })}
 
     return (
         <div 
@@ -468,6 +570,14 @@ function MapView(props) {
         </div>
     );
 }
+
+MapView.defaultProps = {
+    options: {
+        center: { lat: 48, lng: 8},
+        zoom:8,
+    },
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function App() { 

@@ -8,6 +8,8 @@ import json
 from get_key import get_key
 from random import choice, randint
 from faker import Faker
+from PIL import Image
+import googlemaps
 
 app = Flask(__name__)
 app.secret_key = "abc"
@@ -65,7 +67,7 @@ def get_lat_long():
     print("Address", address)
     key = get_key()
     URL = "https://maps.googleapis.com/maps/api/geocode/json"
-    PARAMS = {'key':key,'address': address} #add bounds
+    PARAMS = {'key':key,'address': address, 'region':'us'} #add bounds
     res = requests.get(url = URL, params = PARAMS)
     print(res)
     data = res.json()
@@ -76,7 +78,9 @@ def get_restaurants_objs():
     "Return a json array of restaurant objects to front end"
     data = request.get_json()
     # print("Restaurant response from React", data)
+    
     rest_objs = get_restaurants_by_latlong(data["latitude"], data["longitude"])
+    print(rest_objs)
     # for ID in rest_objs:
         # print(f" ID: {ID}, Name: {rest_objs[ID]['name']},   Address: {rest_objs[ID]['vicinity']}")
     return jsonify(rest_objs)
@@ -102,13 +106,60 @@ def create_random_ratings(restaurant_id):
 @app.route('/api/rest-img', methods = ['POST'])
 def get_photo():
     data = request.get_json()
-    photo_ref = data["photoRef"]
-    key = get_key()
-    URL = "https://maps.googleapis.com/maps/api/place/photo"
-    PARAMS = {'key':key,'photoreference': photo_ref, "maxwidth": 400}
-    res = requests.get(url = URL, params = PARAMS)
+    print(data)
+    API_KEY = get_key()
+    gmaps = googlemaps.Client(key = API_KEY)
+    raw_image_data = gmaps.places_photo(photo_reference=data, max_height=400, max_width=400)
+    print("raw", raw_image_data)
+    f = open('static/js/myImage.jpg', 'wb')
+    for chunk in raw_image_data:
+        if chunk:
+            f.write(chunk)
+    f.close()
+
+    return jsonify("static/js/myImage.jpg")
+    # im = Image.open("myImage.jpg")
+    # im.show()
+
+
+
+    # key = get_key()
+    # URL = "https://maps.googleapis.com/maps/api/place/photo"
+    # PARAMS = {'key':key,'photoreference': data, "maxwidth": 400}
+    # res = requests.get(url = URL, params = PARAMS)
     
-    return res
+    # return jsonify(res)
+    # data = request.get_json
+    # print("data here", data)
+    # photo_ref = data.photoRef
+    # print("PHOTO REF", photo_ref)
+    # API_KEY = get_key()
+    # gmaps = googlemaps.Client(key = API_KEY)
+    # raw_image_data = gmaps.places_photo(photo_reference=photo_ref, max_height=400, max_width=400)
+    # f = open("myImage.jpg", "wb")
+    # for chunk in raw_image_data:
+    #     if chunk:
+    #         f.write(chunk)
+    # f.close
+    # im = Image.open("myImage.jpg")
+    # im.show()
+
+    # return jsonify("hi")
+
+    # print("photo_ref", photo_ref)
+
+    # URL = "https://maps.googleapis.com/maps/api/place/photo"
+    # PARAMS = {'key':key,'photoreference': photo_ref, "maxwidth": 400}
+    # res = requests.get(url = URL, params = PARAMS)
+    # f = open('MyDownloadedImage.jpg', 'wb')
+    # for chunk in res:
+    #     if chunk:
+    #         f.write(res)
+    # f.close()
+
+    # im = Image.open('MyDownloadedImage.jpg')
+    # im.show()
+
 
 @app.route('/api/get-ratings', methods = ['POST'])
 def create_fake_ratings():

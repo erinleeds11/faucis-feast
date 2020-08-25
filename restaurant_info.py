@@ -23,7 +23,7 @@ def get_restaurants_by_latlong(lat = 37.7749 , long=-122.4194):
 
         my_place_id = place['place_id']
 
-        my_fields = ['name','formatted_phone_number','website', 'photo', 'opening_hours', 'rating', 'vicinity']
+        my_fields = ['name','formatted_phone_number','website', 'photo', 'opening_hours', 'rating', 'vicinity', 'geometry']
 
         places_details  = gmaps.place(place_id= my_place_id , fields= my_fields)
 
