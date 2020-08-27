@@ -88,36 +88,36 @@ def get_restaurants_objs():
 @app.route('/api/restaurants/<ID>', methods = ['POST'])
 def show_restaurant_details(ID):
     data = request.get_json()
-    # print("The response should be ID", data)
     rest_info = get_restaurant_by_id(data)
     print(rest_info)
     return jsonify(rest_info)
 
 def create_random_ratings(restaurant_id):
     # print("restaurant_id passed", restaurant_id)
+    from fakeReviews import fake_reviews;
     bools = [True, False]
     users = crud.all_users()
     user_ids = []
     for user in users:
         user_ids.append(user.user_id)
     for i in range(10):
-        crud.create_rating(choice(user_ids), restaurant_id, randint(1,5), randint(1,5), randint(1,5), choice(bools), "blahblah")
+        crud.create_rating(choice(user_ids), restaurant_id, randint(1,5), randint(1,5), randint(1,5), choice(bools), choice(fake_reviews))
 
-@app.route('/api/rest-img', methods = ['POST'])
-def get_photo():
-    data = request.get_json()
-    print(data)
-    API_KEY = get_key()
-    gmaps = googlemaps.Client(key = API_KEY)
-    raw_image_data = gmaps.places_photo(photo_reference=data, max_height=400, max_width=400)
-    print("raw", raw_image_data)
-    f = open('static/js/myImage.jpg', 'wb')
-    for chunk in raw_image_data:
-        if chunk:
-            f.write(chunk)
-    f.close()
+# @app.route('/api/rest-img', methods = ['POST'])
+# def get_photo():
+#     data = request.get_json()
+#     print(data)
+#     API_KEY = get_key()
+#     gmaps = googlemaps.Client(key = API_KEY)
+#     raw_image_data = gmaps.places_photo(photo_reference=data, max_height=400, max_width=400)
+#     print("raw", raw_image_data)
+#     f = open('static/js/myImage.jpg', 'wb')
+#     for chunk in raw_image_data:
+#         if chunk:
+#             f.write(chunk)
+#     f.close()
 
-    return jsonify("static/js/myImage.jpg")
+#     return jsonify("static/js/myImage.jpg")
     # im = Image.open("myImage.jpg")
     # im.show()
 
