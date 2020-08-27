@@ -135,19 +135,25 @@ function Geocoder() {
     }
 
     return (
-            <React.Fragment>
+            <div className = "container-fluid">
                 <div className = "locationSearch">
                 Enter location <input id="enterLocation" type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
                 <button onClick = {getCoords}>Enter</button>
                 </div>
-                <MapView map={map} 
-                    options={{center: {lat: latitude, lng: longitude}, zoom: 11}}
-                    setMap = {setMap}
-                />
-                <Restaurants map={map}
-                    lat={latitude} 
-                    long={longitude}/>
-            </React.Fragment>
+                <div className="row">
+                    <div className="col-7">
+                        <MapView map={map} 
+                            options={{center: {lat: latitude, lng: longitude}, zoom: 11}}
+                            setMap = {setMap}
+                        />
+                    </div>
+                    <div className="col-5">
+                        <Restaurants  map={map}
+                            lat={latitude} 
+                            long={longitude}/>
+                    </div>
+                </div>
+            </div>
     );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,17 +185,13 @@ function Restaurants(props) {
             let index = 1;
             for (const ID in data) {
                 rest_array.push(
-                    <div className = "restaurantContainer">
+                    <div className="row col">
                     <ul id="restList">
-                    <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {data[ID]["name"]}</h3></button>
+                        <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {data[ID]["name"]}</h3></button>
                         <li id="address">Address: {data[ID]["vicinity"]}</li>
                         {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
                         <li id="googlerating">Google Rating: {data[ID]["rating"]}</li>
                         <li id="covidrating">Covid Rating:</li>
-
-
-
-                
                     </ul>
                     </div>
                 );
@@ -230,9 +232,9 @@ function Restaurants(props) {
 
     console.log(restaurants.length)
     return (
-        <React.Fragment>
-            <div>{restaurants}</div>
-        </React.Fragment>
+        <div className="rest_list">
+            <div className="container">{restaurants}</div>
+        </div>
 
     );
      }
@@ -578,7 +580,7 @@ function MapView(props) {
 
     return (
         <div 
-            style={{ height: `60vh`, margin: `1em 0`, borderRadius: `0.5em` }}
+            style={{ height: `120vh`, margin: `1em 0`, borderRadius: `0.5em` }}
             {...{ref}}>
         </div>
     );
@@ -602,27 +604,29 @@ function App() {
     return (
         <Router>
             <div>
-                <nav>
-                    <h1>Fauci's Feast</h1>
-                    <h3>Rate your local restaurants on Covid-19 Readiness</h3>
-                    <ul>
-                        <li>
-                            <Link to="/"> Home </Link>
-                        </li>
-                        <li>
-                            <Link to="/signup"> Create Account </Link>
-                        </li>
-                        <li>
-                            <Link to="/login"> Log in </Link>
-                        </li>
-                        <li>
-                            <Link to="/restaurant-search">Restaurant Search</Link>
-                        </li>
-                        <li>
-                            <Link to="/" onClick ={handleLogout}>Logout</Link>
-                        </li>
-                    </ul>
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                    <div className="collapse navbar-collapse">
+                        <ul className ="navbar-nav">
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/"> Home </Link>
+                            </li>
+                            <li className="nav-item"> 
+                                <Link className="nav-link" to="/signup"> Create Account </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/login"> Log in </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/restaurant-search">Restaurant Search</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/" onClick ={handleLogout}>Logout</Link>
+                            </li>
+                        </ul>
+                    </div>
                 </nav>
+                <h1>Fauci's Feast</h1>
+                <h3>Rate your local restaurants on Covid-19 Readiness</h3>
                 <Switch>
                     <Route path="/signup">
                         <CreateAccount/>

@@ -1,0 +1,5 @@
+fake_reviews = ["Hand sanitizers everywhere. Very nice", "Pretty dirty. Dishes did not seem clean", "Pretty good, hadn't been here in a while.  I like the bowls, you can add a ton of veggies with the meat and it is a huge portion.",
+"I love this place even during these times.", "Corona safe for sure!", "I feel good coming here during these times", "Best to order takeout from here right now", "Fantastic and family friendly", "good place to come and socially distance.", "Might wait to come back here after Coronavirus is gone.", 
+"The food was delicious, but the servers were wearing masks at their chins", "The servers were wearing masks properly, but the dishes seemed dirty", "The tables were too close together", "The tables were socially distanced-atleast 6 ft apart", 
+"I would not come here unless you want to get sick!! Stay away", "Do not come here. Especially with your elders. Extremely packed and they do not handle crowds well", "This placed used QR codes for ordering food.", "QR codes were a nice touch", 
+"Definitely not corona safe"]
