@@ -164,9 +164,12 @@ function Restaurants(props) {
     const coordinates = {"latitude": props.lat, "longitude": props.long};
     const [restaurants, setRestaurants] = React.useState([]);
     const [restData, setRestData] = React.useState(false);
+    const [restDataCovid, setRestDataCovid] = React.useState({});
     const [markers, setMarkers] = React.useState([]);
     const [googleRating, setGoogleRating] = React.useState(0);
-    const [covidRating, setCovidRating] = React.useState(0);
+    const [averageRating, setAverageRating] = React.useState({});
+    // const [covidRating, setCovidRating] = React.useState(0);
+
     // console.log(restaurants);
     // console.log(restData);
 
@@ -180,80 +183,60 @@ function Restaurants(props) {
         })
         .then(response => response.json())
         .then(data => {
-            // console.log(data);
+            for (const ID in data) {
+                data[ID]["covidRating"]=0;}
             setMarkers([]);
             setRestData(data); 
-            let index = 1;
-            const rest_array =[];
-            for (const ID in data) {
-                localStorage.setItem("covidRating", 0);
-                fetch('/api/get-ratings', {
-                    method: 'POST',
-                    body: JSON.stringify(ID),
-                    headers: {
-                        'Content-Type': 'application/json'
-                        },
+        })
+        
+      }, [props.lat, props.long]);
+
+      React.useEffect(() => {
+        const newObj = {};
+        let index = 1;
+        const rest_array = [];
+        console.log(restData);
+
+        for (const ID in restData) {
+            fetch('/api/get-ratings', {
+                method: 'POST',
+                body: JSON.stringify(ID),
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+            })
+            .then(response => response.json())
+            .then(data => {
+                newObj[ID] = data;
+                console.log("data", newObj[ID]) 
                 })
-                .then(response => response.json())
-                .then(result => {
-                    console.log("Data", result)
-                    if (localStorage.getItem("covidRating")) {
-                        localStorage.removeItem("covidRating"); 
-                    };
-                    localStorage.setItem('covidRating', result); 
-                })  
+            .then(()=> { 
+                console.log(newObj)
+                // console.log(averageRating);
+                // setRestDataCovid(newObj);
+                // console.log(restDataCovid);
+                    console.log("in for", newObj[ID]);
                     rest_array.push(
                         <div className="row col">
                         <ul id="restList">
-                            <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {data[ID]["name"]}</h3></button>
-                            <li id="address">Address: {data[ID]["vicinity"]}</li>
+                            <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {restData[ID]["name"]}</h3></button>
+                            <li id="address">Address: {restData[ID]["vicinity"]}</li>
                             {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
-                            <li id="googlerating">Google Rating: {data[ID]["rating"]}</li>
-                            <li id="covidrating">Covid Rating:{localStorage.getItem("covidRating")}</li>
+                            <li id="googlerating">Google Rating: {restData[ID]["rating"]}</li>
+                            <li id="covidrating">Covid Rating:{newObj[ID]}</li>
                         </ul>
                         </div>
                     );
                     index +=1;
-                    
-                }  
-                
-        setRestaurants(rest_array);
-        // setIDList(id_array);
-    })
-            // setRestaurants(rest_array);
-            // setIDList(id_array);
-        
-        
-      }, [props.lat, props.long]);
-    
-//     React.useEffect(()=> {
-//       console.log(IDList);
-//       const averageList = [];
-//       for (const item of IDList) {
-//             console.log(item)
-//             fetch('/api/get-ratings', {
-//                 method: 'POST',
-//                 body: JSON.stringify(item),
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                     },
-//             })
-//             .then(response => response.json())
-//             .then(data => {
-//                     console.log(data)
-//                     averageList.push(data)
+                    }).then(()=>{
+                        console.log(rest_array);
+                        if (rest_array.length == 20)
+                            setRestaurants(rest_array);
+                    })
+            }
+            
+    },[restData])
 
-//     })}
-//     console.log("list avgs", averageList)
-//     // setListAvgs(averageList);
-//     let thisDict = {};
-//     thisDict["results"] = averageList;
-//     console.log("thisDict", thisDict);
-//     setAvgDict(thisDict);
-//     console.log(avgDict["results"])
-
-// }, [IDList])
-// console.log(avgDict);
 
     if ((markers.length === 0) && (restaurants.length>0)) {
 
@@ -280,19 +263,7 @@ function Restaurants(props) {
             index +=1;
     }}
 
-    
-    
-    // fetch('/api/create-ratings', {
-    //     method: 'POST',
-    //     body: JSON.stringify(ID),
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //         },
-    // })
-    // .then(response => response.json())
-    // .then(data => {
     //         console.log(data);
-    
     return (
         <div className="rest_list">
             <div className="container">{restaurants}</div>
