@@ -167,8 +167,8 @@ function Restaurants(props) {
     const [markers, setMarkers] = React.useState([]);
     const [googleRating, setGoogleRating] = React.useState(0);
     const [covidRating, setCovidRating] = React.useState(0);
-    console.log(restaurants);
-    console.log(restData);
+    // console.log(restaurants);
+    // console.log(restData);
 
     React.useEffect(() => 
     { fetch('/api/get-restaurants', {
@@ -183,11 +183,10 @@ function Restaurants(props) {
             // console.log(data);
             setMarkers([]);
             setRestData(data); 
-            const rest_array = []
             let index = 1;
-            const id_array = [];
-            const lst = []
+            const rest_array =[];
             for (const ID in data) {
+                localStorage.setItem("covidRating", 0);
                 fetch('/api/get-ratings', {
                     method: 'POST',
                     body: JSON.stringify(ID),
@@ -197,9 +196,12 @@ function Restaurants(props) {
                 })
                 .then(response => response.json())
                 .then(result => {
-                    console.log("Data", result);  
-                    // setCovidRating(result)          
-                    // console.log("covid rating", covidRating);
+                    console.log("Data", result)
+                    if (localStorage.getItem("covidRating")) {
+                        localStorage.removeItem("covidRating"); 
+                    };
+                    localStorage.setItem('covidRating', result); 
+                })  
                     rest_array.push(
                         <div className="row col">
                         <ul id="restList">
@@ -207,15 +209,16 @@ function Restaurants(props) {
                             <li id="address">Address: {data[ID]["vicinity"]}</li>
                             {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
                             <li id="googlerating">Google Rating: {data[ID]["rating"]}</li>
-                            <li id="covidrating">Covid Rating:{result}</li>
+                            <li id="covidrating">Covid Rating:{localStorage.getItem("covidRating")}</li>
                         </ul>
                         </div>
                     );
-                    index +=1; 
+                    index +=1;
+                    
+                }  
                 
-        })}
         setRestaurants(rest_array);
-        setIDList(id_array);
+        // setIDList(id_array);
     })
             // setRestaurants(rest_array);
             // setIDList(id_array);
@@ -290,7 +293,6 @@ function Restaurants(props) {
     // .then(data => {
     //         console.log(data);
     
-    console.log(restaurants.length)
     return (
         <div className="rest_list">
             <div className="container">{restaurants}</div>

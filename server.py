@@ -131,20 +131,22 @@ def create_fake_ratings():
         return jsonify(average_covid)
     else:
         print("rest_ratings", rest_ratings)
+        average_covid = round(get_covid_average(rest_ratings), 2)
+        return jsonify(average_covid)
         # {rating_id: [{user: fname, lname}, {scores: cleanliness, masks, distancing, outdoor, comments}]}
-        list_of_dicts = []
-        for rating in rest_ratings:
-            user_dict = {}
-            scores_dict={}
-            ratings_dict ={}
-            print("First_name", rating.user.fname)
-            scores_dict["scores"] = [rating.cleanliness_score, rating.masks_score, rating.distancing_score, rating.outdoor_seating, rating.comments]
-            user_dict["user"] = [rating.user.fname, rating.user.lname]
-            print("User dict", user_dict)
-            print("scores dict", scores_dict)
-            list_of_dicts.append([user_dict, scores_dict])
-        print("list_of_dicts", list_of_dicts)
-        return jsonify(list_of_dicts)
+        # list_of_dicts = []
+        # for rating in rest_ratings:
+        #     user_dict = {}
+        #     scores_dict={}
+        #     ratings_dict ={}
+        #     print("First_name", rating.user.fname)
+        #     scores_dict["scores"] = [rating.cleanliness_score, rating.masks_score, rating.distancing_score, rating.outdoor_seating, rating.comments]
+        #     user_dict["user"] = [rating.user.fname, rating.user.lname]
+        #     print("User dict", user_dict)
+        #     print("scores dict", scores_dict)
+        #     list_of_dicts.append([user_dict, scores_dict])
+        # print("list_of_dicts", list_of_dicts)
+        # return jsonify(list_of_dicts)
         
 @app.route('/api/create-rating', methods = ['POST'])
 def user_created_rating():
