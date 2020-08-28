@@ -49,14 +49,14 @@ def login():
     password = data['password']
     user = crud.get_user_by_email(email) 
     
-    if not user.email:
+    if not user:
         print("Username not found")
-        return jsonify("Username not found")
+        return jsonify("Email not found.")
     elif password != user.password:
-       return jsonify("Password not found")
+       return jsonify("Incorrect password.")
     else:
         print(user.user_id)
-        return jsonify(user.user_id)
+        return jsonify("success")
 
 @app.route("/api/get_latlong", methods = ['POST'] ) 
 def get_lat_long():
@@ -92,8 +92,10 @@ def show_restaurant_details(ID):
     print(rest_info)
     return jsonify(rest_info)
 
-def create_random_ratings(restaurant_id):
-    # print("restaurant_id passed", restaurant_id)
+# @app.route('/api/create-ratings', methods = ['POST'])
+def create_random_ratings(ID):
+    # restaurant_id = request.get_json()
+    print("restaurant_id passed", ID)
     from fakeReviews import fake_reviews;
     bools = [True, False]
     users = crud.all_users()
@@ -101,9 +103,72 @@ def create_random_ratings(restaurant_id):
     for user in users:
         user_ids.append(user.user_id)
     for i in range(10):
-        crud.create_rating(choice(user_ids), restaurant_id, randint(1,5), randint(1,5), randint(1,5), choice(bools), choice(fake_reviews))
+        crud.create_rating(choice(user_ids), ID, randint(1,5), randint(1,5), randint(1,5), choice(bools), choice(fake_reviews))
+    return jsonify("success")
 
-# @app.route('/api/rest-img', methods = ['POST'])
+def get_covid_average(rest_ratings):
+    sum = 0
+    length = len(rest_ratings)
+    for rating in rest_ratings:
+        sum += rating.cleanliness_score + rating.masks_score + rating.distancing_score
+    
+    avg = (sum/length)/3
+    print(avg)
+    return avg
+        
+
+@app.route('/api/get-ratings', methods = ['POST'])
+def create_fake_ratings():
+    #get restaurand id 
+    ID = request.get_json()
+    # ID = restID["restID"]
+    rest_ratings = Rating.query.filter(Rating.restaurant_id == ID).all()
+    if not rest_ratings:
+        create_random_ratings(ID)
+        rest_ratings = Rating.query.filter(Rating.restaurant_id == ID).all()
+        average_covid = round(get_covid_average(rest_ratings), 2)
+        print("average covid",average_covid)
+        return jsonify(average_covid)
+    else:
+        print("rest_ratings", rest_ratings)
+        # {rating_id: [{user: fname, lname}, {scores: cleanliness, masks, distancing, outdoor, comments}]}
+        list_of_dicts = []
+        for rating in rest_ratings:
+            user_dict = {}
+            scores_dict={}
+            ratings_dict ={}
+            print("First_name", rating.user.fname)
+            scores_dict["scores"] = [rating.cleanliness_score, rating.masks_score, rating.distancing_score, rating.outdoor_seating, rating.comments]
+            user_dict["user"] = [rating.user.fname, rating.user.lname]
+            print("User dict", user_dict)
+            print("scores dict", scores_dict)
+            list_of_dicts.append([user_dict, scores_dict])
+        print("list_of_dicts", list_of_dicts)
+        return jsonify(list_of_dicts)
+        
+@app.route('/api/create-rating', methods = ['POST'])
+def user_created_rating():
+    rating_info = request.get_json()
+    print(rating_info["outdoorSeating"])
+    rating_created = crud.create_rating(rating_info["userID"], 
+                       rating_info["restaurantID"],
+                       int(rating_info["cleanlinessScore"]),
+                       int(rating_info["masksScore"]),
+                       int(rating_info["distancingScore"]),
+                       bool(rating_info["outdoorSeating"].title()),
+                       rating_info["comments"],
+                        )
+    print(rating_created)
+    return jsonify("success")
+    #create_rating(user_id, restaurant_id, cleanliness_score, masks_score, distancing_score, outdoor_seating, comments):
+
+
+if __name__ == '__main__':
+    connect_to_db(app)
+    app.run(host='0.0.0.0', debug=True)
+
+
+#  @app.route('/api/rest-img', methods = ['POST'])
 # def get_photo():
 #     data = request.get_json()
 #     print(data)
@@ -159,54 +224,3 @@ def create_random_ratings(restaurant_id):
 
     # im = Image.open('MyDownloadedImage.jpg')
     # im.show()
-
-
-@app.route('/api/get-ratings', methods = ['POST'])
-def create_fake_ratings():
-    #get restaurand id 
-    restID = request.get_json()
-    ID = restID["restID"]
-    rest_ratings = Rating.query.filter(Rating.restaurant_id == ID).all()
-    if not rest_ratings:
-        create_random_ratings(ID)
-        rest_ratings = Rating.query.filter(Rating.restaurant_id == ID).all()
-    print("rest_ratings", rest_ratings)
-    # {rating_id: [{user: fname, lname}, {scores: cleanliness, masks, distancing, outdoor, comments}]}
-    list_of_dicts = []
-    for rating in rest_ratings:
-        user_dict = {}
-        scores_dict={}
-        ratings_dict ={}
-        print("First_name", rating.user.fname)
-        scores_dict["scores"] = [rating.cleanliness_score, rating.masks_score, rating.distancing_score, rating.outdoor_seating, rating.comments]
-        user_dict["user"] = [rating.user.fname, rating.user.lname]
-        print("User dict", user_dict)
-        print("scores dict", scores_dict)
-        list_of_dicts.append([user_dict, scores_dict])
-
-    print("list_of_dicts", list_of_dicts)
-    return jsonify(list_of_dicts)
-        
-@app.route('/api/create-rating', methods = ['POST'])
-def user_created_rating():
-    rating_info = request.get_json()
-    print(rating_info["outdoorSeating"])
-    rating_created = crud.create_rating(rating_info["userID"], 
-                       rating_info["restaurantID"],
-                       int(rating_info["cleanlinessScore"]),
-                       int(rating_info["masksScore"]),
-                       int(rating_info["distancingScore"]),
-                       bool(rating_info["outdoorSeating"].title()),
-                       rating_info["comments"],
-                        )
-    print(rating_created)
-    return jsonify("success")
-    #create_rating(user_id, restaurant_id, cleanliness_score, masks_score, distancing_score, outdoor_seating, comments):
-
-
-if __name__ == '__main__':
-    connect_to_db(app)
-    app.run(host='0.0.0.0', debug=True)
-
-
-    

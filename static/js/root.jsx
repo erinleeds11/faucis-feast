@@ -80,15 +80,16 @@ function Login() {
           })
           .then(response => response.json())
             .then(data => {
-            if (data === 'Username not found') {
+                console.log(data)
+            if (data === 'Email not found.') {
                 alert('Incorrect email')
-            } else if (data === "Password not found")  {
+            } else if (data === "Incorrect password.")  {
                 alert('Incorrect Password!')
-            } else {
+            }
+            else{
                 alert("Logged in successfully") 
                 setData(data);
                 setLoggedIn(true);}
-
      
         })
     }
@@ -165,11 +166,12 @@ function Restaurants(props) {
     const [restData, setRestData] = React.useState(false);
     const [markers, setMarkers] = React.useState([]);
     const [googleRating, setGoogleRating] = React.useState(0);
-    // const [covidRating, setCovidRating] = React.useState(0);
+    const [covidRating, setCovidRating] = React.useState(0);
     console.log(restaurants);
     console.log(restData);
-    React.useEffect(() => {
-        fetch('/api/get-restaurants', {
+
+    React.useEffect(() => 
+    { fetch('/api/get-restaurants', {
             method: 'POST',
             body: JSON.stringify(coordinates),
             headers: {
@@ -183,27 +185,72 @@ function Restaurants(props) {
             setRestData(data); 
             const rest_array = []
             let index = 1;
+            const id_array = [];
+            const lst = []
             for (const ID in data) {
-                rest_array.push(
-                    <div className="row col">
-                    <ul id="restList">
-                        <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {data[ID]["name"]}</h3></button>
-                        <li id="address">Address: {data[ID]["vicinity"]}</li>
-                        {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
-                        <li id="googlerating">Google Rating: {data[ID]["rating"]}</li>
-                        <li id="covidrating">Covid Rating:</li>
-                    </ul>
-                    </div>
-                );
-                index +=1;
-            }
-            setRestaurants(rest_array);
-            })
+                fetch('/api/get-ratings', {
+                    method: 'POST',
+                    body: JSON.stringify(ID),
+                    headers: {
+                        'Content-Type': 'application/json'
+                        },
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log("Data", result);  
+                    // setCovidRating(result)          
+                    // console.log("covid rating", covidRating);
+                    rest_array.push(
+                        <div className="row col">
+                        <ul id="restList">
+                            <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {data[ID]["name"]}</h3></button>
+                            <li id="address">Address: {data[ID]["vicinity"]}</li>
+                            {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
+                            <li id="googlerating">Google Rating: {data[ID]["rating"]}</li>
+                            <li id="covidrating">Covid Rating:{result}</li>
+                        </ul>
+                        </div>
+                    );
+                    index +=1; 
+                
+        })}
+        setRestaurants(rest_array);
+        setIDList(id_array);
+    })
+            // setRestaurants(rest_array);
+            // setIDList(id_array);
         
-      }, [props.lat, props.long])
+        
+      }, [props.lat, props.long]);
+    
+//     React.useEffect(()=> {
+//       console.log(IDList);
+//       const averageList = [];
+//       for (const item of IDList) {
+//             console.log(item)
+//             fetch('/api/get-ratings', {
+//                 method: 'POST',
+//                 body: JSON.stringify(item),
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                     },
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                     console.log(data)
+//                     averageList.push(data)
 
-    // console.log("rest Data", restData);
+//     })}
+//     console.log("list avgs", averageList)
+//     // setListAvgs(averageList);
+//     let thisDict = {};
+//     thisDict["results"] = averageList;
+//     console.log("thisDict", thisDict);
+//     setAvgDict(thisDict);
+//     console.log(avgDict["results"])
 
+// }, [IDList])
+// console.log(avgDict);
 
     if ((markers.length === 0) && (restaurants.length>0)) {
 
@@ -230,6 +277,19 @@ function Restaurants(props) {
             index +=1;
     }}
 
+    
+    
+    // fetch('/api/create-ratings', {
+    //     method: 'POST',
+    //     body: JSON.stringify(ID),
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //         },
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //         console.log(data);
+    
     console.log(restaurants.length)
     return (
         <div className="rest_list">
@@ -238,7 +298,7 @@ function Restaurants(props) {
 
     );
      }
-
+    
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function RestaurantDetails() {
@@ -390,14 +450,14 @@ function RestaurantMap(props) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function ShowRatings(props) {
-    const restaurantID = {"restID": props.restID};
+    // const restaurantID = {"restID": props.restID};
     const [ratingsList, setRatingsList] = React.useState([]);
     const [dataLength, setDataLength] = React.useState(0);
     let [ratingsSum, setRatingsSum] = React.useState(0);
     React.useEffect(()=> {
         fetch('/api/get-ratings', {
             method: 'POST',
-            body: JSON.stringify(restaurantID),
+            body: JSON.stringify(props.restID),
             headers: {
                 'Content-Type': 'application/json'
                 },
@@ -441,7 +501,7 @@ function ShowRatings(props) {
 
     return(
     <div>
-        <p>Average COVID-19 Readiness Rating: {(ratingsSum/dataLength).toFixed(2)}/5</p>
+        <p>Average COVID-19 Readiness Rating: {(ratingsSum/dataLength).toFixed(2)}/3</p>
         <div>{ratingsList}</div>
         
     </div>);
@@ -607,6 +667,12 @@ function App() {
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="collapse navbar-collapse">
                         <ul className ="navbar-nav">
+                            <li>
+                                <img className = "logo" src={()=>{require("/Users/erinleeds/src/faucis-feast/public/fauciLogo.jpg")}}/>
+                            </li>
+                            <li className="nav-item">
+                                <h4>Fauci's Feast</h4>
+                            </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/"> Home </Link>
                             </li>
@@ -616,9 +682,9 @@ function App() {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/login"> Log in </Link>
                             </li>
-                            <li className="nav-item">
+                            {/* <li className="nav-item">
                                 <Link className="nav-link" to="/restaurant-search">Restaurant Search</Link>
-                            </li>
+                            </li> */}
                             <li className="nav-item">
                                 <Link className="nav-link" to="/" onClick ={handleLogout}>Logout</Link>
                             </li>
@@ -631,19 +697,21 @@ function App() {
                     <Route path="/signup">
                         <CreateAccount/>
                     </Route>
-                    <Route path="/restaurant-search">
+                    {/* <Route path="/restaurant-search">
                         <Geocoder/>
-                    </Route>
+                    </Route> */}
                     <Route path="/login">
                         <Login/>
                     </Route>
+                    <Route path="/restaurants/:ID">
+                        <RestaurantDetails/>
+                    </Route>
                     <Route path="/">
+                        <Geocoder/>
                         <Homepage/>
+                        
                     </Route>
                 </Switch>
-                <Route path="/restaurants/:ID">
-                        <RestaurantDetails/>
-                </Route>
             </div>
         </Router>
     );
