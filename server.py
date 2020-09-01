@@ -68,7 +68,8 @@ def get_lat_long():
     key = get_key()
     URL = "https://maps.googleapis.com/maps/api/geocode/json"
     PARAMS = {'key':key,'address': address, 'region':'us'} #add bounds
-    res = requests.get(url = URL, params = PARAMS)
+    if data:
+        res = requests.get(url = URL, params = PARAMS)
     print(res)
     data = res.json()
     return data
@@ -77,24 +78,20 @@ def get_lat_long():
 def get_restaurants_objs():
     "Return a json array of restaurant objects to front end"
     data = request.get_json()
-    # print("Restaurant response from React", data)
-    
-    rest_objs = get_restaurants_by_latlong(data["latitude"], data["longitude"])
+    if data:
+        rest_objs = get_restaurants_by_latlong(data["latitude"], data["longitude"])
     print(rest_objs)
-    # for ID in rest_objs:
-        # print(f" ID: {ID}, Name: {rest_objs[ID]['name']},   Address: {rest_objs[ID]['vicinity']}")
     return jsonify(rest_objs)
 
 @app.route('/api/restaurants/<ID>', methods = ['POST'])
 def show_restaurant_details(ID):
     data = request.get_json()
-    rest_info = get_restaurant_by_id(data)
+    if data: 
+        rest_info = get_restaurant_by_id(data)
     print(rest_info)
     return jsonify(rest_info)
 
-# @app.route('/api/create-ratings', methods = ['POST'])
 def create_random_ratings(ID):
-    # restaurant_id = request.get_json()
     print("restaurant_id passed", ID)
     from fakeReviews import fake_reviews;
     bools = [True, False]
@@ -103,7 +100,7 @@ def create_random_ratings(ID):
     for user in users:
         user_ids.append(user.user_id)
     for i in range(10):
-        crud.create_rating(choice(user_ids), ID, randint(1,5), randint(1,5), randint(1,5), choice(bools), choice(fake_reviews))
+        crud.create_rating(choice(user_ids), ID, randint(1,5), randint(2,5), randint(2,5), choice(bools), choice(fake_reviews))
     return jsonify("success")
 
 def get_covid_average(rest_ratings):
@@ -117,36 +114,44 @@ def get_covid_average(rest_ratings):
     return avg
         
 
-@app.route('/api/get-ratings', methods = ['POST'])
-def create_fake_ratings():
-    #get restaurand id 
-    ID = request.get_json()
-    # ID = restID["restID"]
-    rest_ratings = Rating.query.filter(Rating.restaurant_id == ID).all()
-    if not rest_ratings:
-        create_random_ratings(ID)
+
+@app.route('/api/get-avg-covid', methods = ['POST'])
+def get_avg_covid():
+    IDs = request.get_json()
+    covid_list = []
+    for ID in IDs:
         rest_ratings = Rating.query.filter(Rating.restaurant_id == ID).all()
-        average_covid = round(get_covid_average(rest_ratings), 2)
-        print("average covid",average_covid)
-        return jsonify(average_covid)
-    else:
-        print("rest_ratings", rest_ratings)
-        average_covid = round(get_covid_average(rest_ratings), 2)
-        return jsonify(average_covid)
-        # {rating_id: [{user: fname, lname}, {scores: cleanliness, masks, distancing, outdoor, comments}]}
-        # list_of_dicts = []
-        # for rating in rest_ratings:
-        #     user_dict = {}
-        #     scores_dict={}
-        #     ratings_dict ={}
-        #     print("First_name", rating.user.fname)
-        #     scores_dict["scores"] = [rating.cleanliness_score, rating.masks_score, rating.distancing_score, rating.outdoor_seating, rating.comments]
-        #     user_dict["user"] = [rating.user.fname, rating.user.lname]
-        #     print("User dict", user_dict)
-        #     print("scores dict", scores_dict)
-        #     list_of_dicts.append([user_dict, scores_dict])
-        # print("list_of_dicts", list_of_dicts)
-        # return jsonify(list_of_dicts)
+        if not rest_ratings:
+            create_random_ratings(ID)
+            rest_ratings = Rating.query.filter(Rating.restaurant_id == ID).all()
+            average_covid = round(get_covid_average(rest_ratings), 2)
+            print("average covid",average_covid)
+            covid_list.append(average_covid)
+        else:
+            print("rest_ratings", rest_ratings)
+            average_covid = round(get_covid_average(rest_ratings), 2)
+            covid_list.append(average_covid)
+    return jsonify(covid_list)
+
+
+@app.route('/api/get-ratings', methods = ['POST'])
+def get_ratings():
+    ID = request.get_json()
+    list_of_dicts = []
+    rest_ratings = Rating.query.filter(Rating.restaurant_id == ID).all()
+    print("Rest ratings", rest_ratings)
+    for rating in rest_ratings:
+        user_dict = {}
+        scores_dict={}
+        ratings_dict ={}
+        print("First_name", rating.user.fname)
+        scores_dict["scores"] = [rating.cleanliness_score, rating.masks_score, rating.distancing_score, rating.outdoor_seating, rating.comments]
+        user_dict["user"] = [rating.user.fname, rating.user.lname]
+        print("User dict", user_dict)
+        print("scores dict", scores_dict)
+        list_of_dicts.append([user_dict, scores_dict])
+    print("list_of_dicts", list_of_dicts)
+    return jsonify(list_of_dicts)
         
 @app.route('/api/create-rating', methods = ['POST'])
 def user_created_rating():

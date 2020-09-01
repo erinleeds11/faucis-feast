@@ -4,6 +4,7 @@ const Link =  ReactRouterDOM.Link;
 const Prompt =  ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
+// import fauciLogo from  
 
 
 function Homepage() {
@@ -116,9 +117,8 @@ function Geocoder() {
     const [latitude, setLat] = React.useState(0);
     const [longitude, setLong] = React.useState(0);
 
-
     const getCoords = () => {
-        let latLong = []
+        let latLong = [];
         const address_info = {"address": address};
         fetch('/api/get_latlong', {
             method: 'POST', 
@@ -144,7 +144,7 @@ function Geocoder() {
                 <div className="row">
                     <div className="col-7">
                         <MapView map={map} 
-                            options={{center: {lat: latitude, lng: longitude}, zoom: 11}}
+                            options={{center: {lat: latitude, lng: longitude}, zoom: 10}}
                             setMap = {setMap}
                         />
                     </div>
@@ -164,14 +164,10 @@ function Restaurants(props) {
     const coordinates = {"latitude": props.lat, "longitude": props.long};
     const [restaurants, setRestaurants] = React.useState([]);
     const [restData, setRestData] = React.useState(false);
-    const [restDataCovid, setRestDataCovid] = React.useState({});
     const [markers, setMarkers] = React.useState([]);
     const [googleRating, setGoogleRating] = React.useState(0);
-    const [averageRating, setAverageRating] = React.useState({});
-    // const [covidRating, setCovidRating] = React.useState(0);
-
-    // console.log(restaurants);
-    // console.log(restData);
+    const [averageRating, setAverageRating] = React.useState([]);
+    const [IDs, setIDs] = React.useState([]);
 
     React.useEffect(() => 
     { fetch('/api/get-restaurants', {
@@ -183,71 +179,78 @@ function Restaurants(props) {
         })
         .then(response => response.json())
         .then(data => {
+            let idList = [];
             for (const ID in data) {
                 data[ID]["covidRating"]=0;}
+            console.log(idList);
             setMarkers([]);
             setRestData(data); 
+           
         })
         
       }, [props.lat, props.long]);
 
       React.useEffect(() => {
-        const newObj = {};
+        // const newObj = {};
         let index = 1;
         const rest_array = [];
         console.log(restData);
+        const idList = [];
 
         for (const ID in restData) {
-            fetch('/api/get-ratings', {
-                method: 'POST',
-                body: JSON.stringify(ID),
-                headers: {
-                    'Content-Type': 'application/json'
-                    },
-            })
-            .then(response => response.json())
-            .then(data => {
-                newObj[ID] = data;
-                console.log("data", newObj[ID]) 
-                })
-            .then(()=> { 
-                console.log(newObj)
-                // console.log(averageRating);
-                // setRestDataCovid(newObj);
-                // console.log(restDataCovid);
-                    console.log("in for", newObj[ID]);
-                    rest_array.push(
-                        <div className="row col">
-                        <ul id="restList">
-                            <button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {restData[ID]["name"]}</h3></button>
-                            <li id="address">Address: {restData[ID]["vicinity"]}</li>
-                            {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
-                            <li id="googlerating">Google Rating: {restData[ID]["rating"]}</li>
-                            <li id="covidrating">Covid Rating:{newObj[ID]}</li>
-                        </ul>
-                        </div>
-                    );
-                    index +=1;
-                    }).then(()=>{
-                        console.log(rest_array);
-                        if (rest_array.length == 20)
-                            setRestaurants(rest_array);
-                    })
-            }
+            idList.push(ID);
+        }
+        console.log(idList);
+
+        fetch('/api/get-avg-covid', {
+            method: 'POST',
+            body: JSON.stringify(idList),
+            headers: {
+                'Content-Type': 'application/json'
+                },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setAverageRating(data);
+    })
             
     },[restData])
 
-
-    if ((markers.length === 0) && (restaurants.length>0)) {
-
-
+    React.useEffect(()=> {
+    if (averageRating.length > 0) {
+        console.log(averageRating);
+        let i = 0;
+        const rest_array =[]
         let index = 1;
         for (const ID in restData) {
+            rest_array.push(
+                <div key = {i} className="row col">
+                <ul id="restList">
+                    <i class="fas fa-utensils"></i><button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {restData[ID]["name"]}</h3></button>
+                    <li id="address">Address: {restData[ID]["vicinity"]}</li>
+                    {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
+                    <li id="googlerating">Google Rating: {restData[ID]["rating"]}/5</li>
+                    <li id="covidrating"><i class="fas fa-virus"></i>Covid Rating: {averageRating[i]}/5</li>
+                </ul>
+                </div>
+            );
+            index +=1;
+            i +=1;
+    }
+    setRestaurants(rest_array);
+    }}, [averageRating]);
+
+    if ((markers.length === 0) && (restaurants.length>0) && (averageRating.length>0)) {
+
+        let index = 1;
+        let i = 0;
+        for (const ID in restData) {
             let iconColor = "red";
-            let googleRating = restData[ID]["rating"];
-            if (googleRating >= 4.5) {
+            // let googleRating = restData[ID]["rating"];
+            if (averageRating[i] >= 3.5) {
                 iconColor="green";
-            } else if (googleRating >=3.5) {
+            } else if (averageRating[i] >=3) {
                 iconColor="yellow";
             }
             const current_marker = new window.google.maps.Marker({map:props.map, position: {lat: restData[ID]["geometry"]["location"]["lat"], 
@@ -261,6 +264,7 @@ function Restaurants(props) {
             setMarkers(current_marker);
 
             index +=1;
+            i +=1;
     }}
 
     //         console.log(data);
@@ -284,12 +288,11 @@ function RestaurantDetails() {
     const [googleRating, setGoogleRating] = React.useState(0);
     const [passID, setPassID] = React.useState("")
     const [rateRest, setRateRest] = React.useState();
-    const [photo, setPhoto] = React.useState("")
-    const [lat, setLat] = React.useState(0)
-    const [lng, setLng] = React.useState(0)
+    const [photo, setPhoto] = React.useState("");
+    const [lat, setLat] = React.useState(0);
+    const [lng, setLng] = React.useState(0);
+    const [phone, setPhone] = React.useState();
 
-    // const [covidRating, setCovidRating] = React.useState(0)
-    // let location = useLocation();
     let { ID } = ReactRouterDOM.useParams();
     console.log(ID);
     const rateIt =() => {
@@ -309,14 +312,21 @@ function RestaurantDetails() {
         setName(data["name"]);
         setWebsite(data["website"]);
         setVicinity(data["vicinity"]);
-        setHours(data["hours"]);
+        setHours(data["opening_hours"]["weekday_text"]);
         setGoogleRating(data["rating"])
         setPhoto(data["photos"][0]["photo_reference"])
         setLat(data["geometry"]["location"]["lat"])
         setLng(data["geometry"]["location"]["lng"])
-    });
-    }, [])
-
+        setPhone(data["formatted_phone_number"])
+        
+})
+    }, [ID])
+// React.useEffect(()=> {
+//     if (map != undefined) {
+//         setMarker(new window.google.maps.Marker({map:map, position: {lat: lat, 
+//         lng:lng}}))
+//     }
+// },[lat])
     // console.log("photo refernce", photo)
     if (rateRest === true ) {
     return (
@@ -326,6 +336,7 @@ function RestaurantDetails() {
             <p>Website: {website}</p>
             <p>Address: {vicinity}</p>
             <p>Hours: {hours}</p>
+            <p>Contact: {phone}</p>
             <p>Google Rating: {googleRating}/5</p>
             <RestaurantMap map={map} marker={marker} setMarker={setMarker} setMap = {setMap} options={{center: {lat: lat, lng: lng}, zoom: 18}}/>
             <button onClick  = {()=>{setRateRest(true)}}>Rate this restaurant</button>
@@ -341,9 +352,18 @@ function RestaurantDetails() {
             {/* <Photo photoRef = {photo}/> */}
             <p>Website: {website}</p>
             <p>Address: {vicinity}</p>
-            <p>Hours: {hours}</p>
+            <div>Hours:
+                <p>{hours[0]}</p>
+                <p>{hours[1]}</p>
+                <p>{hours[2]}</p>
+                <p>{hours[3]}</p>
+                <p>{hours[4]}</p>
+                <p>{hours[5]}</p>
+                <p>{hours[6]}</p>
+            </div>
+            <p>Contact: {phone}</p>
             <p>Google Rating: {googleRating}/5</p>
-            <RestaurantMap map={map} marker={marker} setMarker={setMarker} setMap = {setMap} options={{center: {lat: lat, lng: lng}, zoom: 18}}/>
+            <RestaurantMap map={map} setMap = {setMap} setMarker={setMarker} marker={marker} options={{center: {lat: lat, lng: lng}, zoom: 18}}/>
             {/* <p>Covid Rating: {covidRating}</p> */}
             <button onClick  = {rateIt}>Rate this restaurant</button>
             <div className = "rest_ratings"><ShowRatings restID={ID}/></div>
@@ -359,26 +379,34 @@ function RestaurantMap(props) {
     const lng = props.options.center.lng;
     React.useEffect(()=> {
         const onLoad = () => {
-            props.setMap(new window.google.maps.Map(ref.current, options));
+            const aMap = new window.google.maps.Map(ref.current, options);
+            const aMarker = new window.google.maps.Marker({map:aMap, title :"aMarker", position: options["center"]})
+            
         }
+        
         if (!window.google) {
             const script = document.createElement("script");
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDzz_uHnsxuVF8hIb7HkR3auXgw9TlfPho"
+            // script.src = "https://maps.googleapis.com/maps/api/js?key="
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
         } else {
             onLoad();
+           
+
         }
     }, [props.options.center.lat, props.options.center.lng])
     
-    console.log("marker", props.marker)
-    // props.setMarker(new google.maps.Marker({
-    //     map: props.map, 
-    //     position: {lat:lat, lng:lng},
-    //     title: "hello",
-    // }));
-    
+    React.useEffect(()=>{
+        console.log(options["center"]);
+        if ((props.map !== undefined) && (props.marker === undefined)) {
+            console.log("making marker")
+            props.setMarker(new window.google.maps.Marker({map:props.map, position: options["center"]}))
+        }
+        console.log(props.marker)
+        console.log("map", props.map)
+    },[props.map])
+
     return (
         <div className = "restaurantMap"
             style={{ height: `60vh`, margin: `1em 0`, borderRadius: `0.5em` }}
@@ -386,41 +414,6 @@ function RestaurantMap(props) {
         </div>
     );
 }
-
-
-// function Photo(props) {
-//     // console.log(props.photoRef)
-//     const [photo, setPhoto] = React.useState();
-//     // const photoRef = props.photoRef;
-//     React.useEffect(() => {
-//     fetch('/api/rest-img', {
-//         method: 'POST', 
-//         body: JSON.stringify(props.photoRef),
-//         credentials: 'include',
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//       })
-//       .then(response => response.json())
-//         .then(data => {
-//             setPhoto(data)
-//             // console.log("DATA", data)
-
-//     })
-// }, [props.photoRef])
-    
-//     return (
-//         <div>
-//             <p>image??</p>
-//             <img src='/myImage.jpg'></img>
-//             </div>
-    
-    
-//     )
-// }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function ShowRatings(props) {
     // const restaurantID = {"restID": props.restID};
@@ -437,6 +430,7 @@ function ShowRatings(props) {
         })
         .then(response => response.json())
             .then(data => {
+                console.log(data);
                 const ratings_array = [];
                 let i =0;
                 // setDataLength(data.length);
@@ -455,10 +449,10 @@ function ShowRatings(props) {
                     setRatingsSum(sumRate/3)
                     ratings_array.push(
                     <div key={i}>
-                        <h3>User: {rating[0]["user"][0]} {rating[0]["user"][1]}</h3>
-                        <p>Cleanliness: {rating[1]["scores"][0]}</p>
-                        <p>Masks: {rating[1]["scores"][1]}</p>
-                        <p>Social Distancing Enforced: {rating[1]["scores"][2]} </p>
+                        <h5><i className="far fa-user">{rating[0]["user"][0]} {rating[0]["user"][1]}</i></h5>
+                        <p>Cleanliness: {rating[1]["scores"][0]}/5</p>
+                        <p><i className="fas fa-head-side-mask">Use of Masks: {rating[1]["scores"][1]}/5</i></p>
+                        <p>Social Distancing: {rating[1]["scores"][2]}/5 </p>
                         <p>Outdoor Seating: {outdoors} </p>
                         <p>Comments: {rating[1]["scores"][4]}</p>
                     </div>
@@ -474,7 +468,7 @@ function ShowRatings(props) {
 
     return(
     <div>
-        <p>Average COVID-19 Readiness Rating: {(ratingsSum/dataLength).toFixed(2)}/3</p>
+        <p><i className="fas fa-virus"></i>Average COVID-19 Readiness Rating: {(ratingsSum/dataLength).toFixed(2)}/5</p>
         <div>{ratingsList}</div>
         
     </div>);
@@ -588,12 +582,11 @@ function MapView(props) {
     React.useEffect(()=> {
         const onLoad = () => {
             props.setMap(new window.google.maps.Map(ref.current, options));
-            // setMarker(new window.google.maps.Marker({map:props.map, position: options["center"]}))
         }
 
         if (!window.google) {
             const script = document.createElement("script");
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDzz_uHnsxuVF8hIb7HkR3auXgw9TlfPho"
+            // script.src = "https://maps.googleapis.com/maps/api/js?key="
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
@@ -641,7 +634,7 @@ function App() {
                     <div className="collapse navbar-collapse">
                         <ul className ="navbar-nav">
                             <li>
-                                <img className = "logo" src={()=>{require("/Users/erinleeds/src/faucis-feast/public/fauciLogo.jpg")}}/>
+                                <img className = "logo" alt="logo" src={'/Users/erinleeds/src/faucis-feast/static/js/fauciLogo.jpg'}/>
                             </li>
                             <li className="nav-item">
                                 <h4>Fauci's Feast</h4>
