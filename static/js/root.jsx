@@ -850,6 +850,8 @@ function WriteReview(props) {
                 <div id = "cleanliness" value = {cleanliness} onChange = {e => setCleanliness(e.target.value)}>
                     Cleanliness:
                     <select name="cleanliness">
+                    <option value="none" selected disabled hidden>  
+                        </option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -861,6 +863,8 @@ function WriteReview(props) {
                 <div id = "masks" value = {masks} onChange = {e => setMasks(e.target.value)}>
                     Masks:
                     <select name="masks">
+                    <option value="none" selected disabled hidden>  
+                        </option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -871,8 +875,10 @@ function WriteReview(props) {
 
                 <div id = "distancing" value = {distancing} onChange = {e => setDistancing(e.target.value)}>
                     Social Distancing:
-                    <select name="masks">
-                        <option value="1">1</option>
+                    <select name="masks" >
+                        <option value="none" selected disabled hidden>  
+                        </option>
+                                <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
@@ -896,8 +902,8 @@ function WriteReview(props) {
                 </div>
 
                 <div id="comments" value = {comments} onChange = {e => setComments(e.target.value)}>
-                    Comments:
-                    <input type="textarea" name="comments"></input>
+                    <p>Comments:</p>
+                    <input className = "textarea" type="textarea" name="comments"></input>
                 </div>
             
             <button type="submit">Post Rating</button>
