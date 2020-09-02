@@ -4,8 +4,9 @@ const Link =  ReactRouterDOM.Link;
 const Prompt =  ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
-// import fauciLogo from  
 
+
+ 
 
 function Homepage() {
     return <div>
@@ -404,14 +405,17 @@ function Restaurants(props) {
         const rest_array =[]
         let index = 1;
         for (const ID in restData) {
+            let covid = averageRating[i];
             rest_array.push(
                 <div key = {i} className="row col">
                 <ul id="restList">
-                    <i className="fas fa-utensils"></i><button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {restData[ID]["name"]}</h3></button>
+                    <i className="fas fa-utensils"></i><button onClick = {()=>{history.push(`/restaurants/${ID}/${covid}`)}}><h3> {index}. Name: {restData[ID]["name"]}</h3></button>
+                    <h5><StarRating rating = {covid}/></h5>
                     <li id="address">Address: {restData[ID]["vicinity"]}</li>
                     {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
                     <li id="googlerating">Google Rating: {restData[ID]["rating"]}/5</li>
-                    <li id="covidrating"><i className="fas fa-virus"></i>Covid Rating: {averageRating[i]}/5</li>
+                    {/* <li id="covidrating"><i className="fas fa-virus"></i>Covid Rating: {averageRating[i]}/5</li> */}
+
                 </ul>
                 </div>
             );
@@ -608,8 +612,9 @@ function RestaurantDetails() {
         }
     ];
 
-    let { ID } = ReactRouterDOM.useParams();
+    let { ID, covidRating } = ReactRouterDOM.useParams();
     console.log(ID);
+    console.log(covidRating);
     const rateIt =() => {
         setRateRest(true);
     }
@@ -646,6 +651,8 @@ function RestaurantDetails() {
             <p>Hours: {hours}</p>
             <p>Contact: {phone}</p>
             <p>Google Rating: {googleRating}/5</p>
+            {/* <p>COVID19 Readiness Rating {covidRating}/5</p> */}
+            <StarRating rating = {covidRating}/>
             <RestaurantMap map={map} marker={marker} setMarker={setMarker} setMap = {setMap} options={{center: {lat: lat, lng: lng}, zoom: 15, styles:arr}}/>
             <button onClick  = {()=>{setRateRest(true)}}>Rate this restaurant</button>
             <WriteReview restaurantID = {ID}/>
@@ -671,6 +678,8 @@ function RestaurantDetails() {
             </div>
             <p>Contact: {phone}</p>
             <p>Google Rating: {googleRating}/5</p>
+            {/* <p>COVID19 Readiness Rating {covidRating}/5</p> */}
+            <StarRating rating = {covidRating}/>
             <RestaurantMap map={map} setMap = {setMap} setMarker={setMarker} marker={marker} options={{center: {lat: lat, lng: lng}, zoom: 15,styles:arr}}/>
             {/* <p>Covid Rating: {covidRating}</p> */}
             <button onClick  = {rateIt}>Rate this restaurant</button>
@@ -679,6 +688,8 @@ function RestaurantDetails() {
         </div>);
     }
 }
+
+
 /////////////////////////////////////////////////////////////////////////////////
 function RestaurantMap(props) {
     const options = props.options;
@@ -725,8 +736,6 @@ function RestaurantMap(props) {
 
 function ShowRatings(props) {
     const [ratingsList, setRatingsList] = React.useState([]);
-    const [dataLength, setDataLength] = React.useState(0);
-    let [ratingsSum, setRatingsSum] = React.useState(0);
     React.useEffect(()=> {
         fetch('/api/get-ratings', {
             method: 'POST',
@@ -741,9 +750,6 @@ function ShowRatings(props) {
                 const ratings_array = [];
                 let i =0;
                 // setDataLength(data.length);
-                const length = data.length;
-                setDataLength(length)
-                let sumRate =0;
                 for (const rating of data) {
                     console.log("rating", rating)
                     i=i+1; 
@@ -765,8 +771,6 @@ function ShowRatings(props) {
                     } else {
                     sanitizer = "No";
                     }
-                    sumRate += rating[1]["scores"][0] + rating[1]["scores"][1] + rating[1]["scores"][2];
-                    setRatingsSum(sumRate/3)
                     ratings_array.push(
                     <div key={i}>
                         <h5><i className="far fa-user">{rating[0]["user"][0]} {rating[0]["user"][1]}</i></h5>
@@ -790,7 +794,6 @@ function ShowRatings(props) {
 
     return(
     <div>
-        <p><i className="fas fa-virus"></i>Average COVID-19 Readiness Rating: {(ratingsSum/dataLength).toFixed(2)}/5</p>
         <div>{ratingsList}</div>
         
     </div>);
@@ -807,7 +810,8 @@ function WriteReview(props) {
     const [codes, setCodes] = React.useState();
     const [sanitizer, setSanitizer] = React.useState();
     const [comments, setComments] = React.useState("");
-    const [posted, setPosted] = React.useState()
+    const [posted, setPosted] = React.useState();
+
   
     const handleSubmit = (evt) => {
         evt.preventDefault();
@@ -835,6 +839,7 @@ function WriteReview(props) {
             }
         })
     }
+
 
     if (localStorage.getItem("userID")) {
     return (
@@ -1006,7 +1011,7 @@ function App() {
                     <Route path="/login">
                         <Login/>
                     </Route>
-                    <Route path="/restaurants/:ID">
+                    <Route path="/restaurants/:ID/:covidRating">
                         <RestaurantDetails/>
                     </Route>
                     <Route path="/">

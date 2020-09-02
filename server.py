@@ -100,7 +100,7 @@ def create_random_ratings(ID):
     for user in users:
         user_ids.append(user.user_id)
     for i in range(10):
-        crud.create_rating(choice(user_ids), ID, randint(1,5), randint(2,5), randint(2,5), choice(bools), choice(bools), choice(bools), choice(fake_reviews))
+        crud.create_rating(choice(user_ids), ID, randint(2,5), randint(2,5), randint(3,5), choice(bools), choice(bools), choice(bools), choice(fake_reviews))
     return jsonify("success")
 
 def get_covid_average(rest_ratings):

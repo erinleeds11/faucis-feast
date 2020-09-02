@@ -32,3 +32,11 @@
 h1 { 
         padding-top: 65px; 
     }
+
+.fa-star, .fa-star-half-alt {
+    color:orange;
+}
+
+#fauci_approved {
+    height: 50px;
+}
