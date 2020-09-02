@@ -99,6 +99,11 @@ function Login() {
         return <Redirect to='/restaurant-search'/>
     }
 
+    if (localStorage.getItem("userID")) {
+        alert('Already logged in!');
+        return <Redirect to='/restaurant-search'/>
+    }
+
     return (
     <div>
         <h2 className = "logIn">Log in</h2> 
@@ -116,7 +121,239 @@ function Geocoder() {
     const [address, setAddress] = React.useState("");
     const [latitude, setLat] = React.useState(0);
     const [longitude, setLong] = React.useState(0);
-
+    const arr = [
+        {
+            "featureType": "administrative",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#6195a0"
+                }
+            ]
+        },
+        {
+            "featureType": "administrative.province",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "landscape",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "lightness": "0"
+                },
+                {
+                    "saturation": "0"
+                },
+                {
+                    "color": "#f5f5f2"
+                },
+                {
+                    "gamma": "1"
+                }
+            ]
+        },
+        {
+            "featureType": "landscape.man_made",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "lightness": "-3"
+                },
+                {
+                    "gamma": "1.00"
+                }
+            ]
+        },
+        {
+            "featureType": "landscape.natural.terrain",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "poi.park",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "color": "#bae5ce"
+                },
+                {
+                    "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "saturation": -100
+                },
+                {
+                    "lightness": 45
+                },
+                {
+                    "visibility": "simplified"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "visibility": "simplified"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "color": "#fac9a9"
+                },
+                {
+                    "visibility": "simplified"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "labels.text",
+            "stylers": [
+                {
+                    "color": "#4e4e4e"
+                }
+            ]
+        },
+        {
+            "featureType": "road.arterial",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#787878"
+                }
+            ]
+        },
+        {
+            "featureType": "road.arterial",
+            "elementType": "labels.icon",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "transit",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "visibility": "simplified"
+                }
+            ]
+        },
+        {
+            "featureType": "transit.station.airport",
+            "elementType": "labels.icon",
+            "stylers": [
+                {
+                    "hue": "#0a00ff"
+                },
+                {
+                    "saturation": "-77"
+                },
+                {
+                    "gamma": "0.57"
+                },
+                {
+                    "lightness": "0"
+                }
+            ]
+        },
+        {
+            "featureType": "transit.station.rail",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#43321e"
+                }
+            ]
+        },
+        {
+            "featureType": "transit.station.rail",
+            "elementType": "labels.icon",
+            "stylers": [
+                {
+                    "hue": "#ff6c00"
+                },
+                {
+                    "lightness": "4"
+                },
+                {
+                    "gamma": "0.75"
+                },
+                {
+                    "saturation": "-68"
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "all",
+            "stylers": [
+                {
+                    "color": "#eaf6f8"
+                },
+                {
+                    "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "color": "#c7eced"
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "lightness": "-49"
+                },
+                {
+                    "saturation": "-53"
+                },
+                {
+                    "gamma": "0.79"
+                }
+            ]
+        }
+    ];
     const getCoords = () => {
         let latLong = [];
         const address_info = {"address": address};
@@ -134,17 +371,20 @@ function Geocoder() {
                 setLong(data["results"][0]["geometry"]["location"]["lng"]);                 
         }})
     }
-
+    if ((latitude!==0) && (longitude!==0)) {
     return (
             <div className = "container-fluid">
                 <div className = "locationSearch">
                 Enter location <input id="enterLocation" type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
                 <button onClick = {getCoords}>Enter</button>
                 </div>
+                <div>
+                    <Legend />
+                </div>
                 <div className="row">
                     <div className="col-7">
                         <MapView map={map} 
-                            options={{center: {lat: latitude, lng: longitude}, zoom: 10}}
+                            options={{center: {lat: latitude, lng: longitude}, zoom: 10, styles: arr}}
                             setMap = {setMap}
                         />
                     </div>
@@ -156,6 +396,42 @@ function Geocoder() {
                 </div>
             </div>
     );
+    } else {
+        return (
+            <div className = "container-fluid">
+                <div className = "locationSearch">
+                Enter location <input id="enterLocation" type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
+                <button onClick = {getCoords}>Enter</button>
+                </div>
+                <div className="row">
+                    <div className="col-7">
+                        <MapView map={map} 
+                            options={{center: {lat: 37.8272, lng: -122.2913}, zoom: 7, styles:arr}}
+                            setMap = {setMap}
+                        />
+                    </div>
+                    <div className="col-5">
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+}
+
+function Legend() {
+    const green = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+    const yellow = "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
+    const red = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+
+    return (
+        <div id = "legend" className = "col-5">
+            Covid-19 Rating/5:
+            <span><img src={green}/></span>3.5-5
+            <span><img src={yellow}/></span>3-3.49
+            <span><img src={red}/></span>0-2.99
+        </div>
+    )
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -227,11 +503,11 @@ function Restaurants(props) {
             rest_array.push(
                 <div key = {i} className="row col">
                 <ul id="restList">
-                    <i class="fas fa-utensils"></i><button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {restData[ID]["name"]}</h3></button>
+                    <i className="fas fa-utensils"></i><button onClick = {()=>{history.push(`/restaurants/${ID}`)}}><h3> {index}. Name: {restData[ID]["name"]}</h3></button>
                     <li id="address">Address: {restData[ID]["vicinity"]}</li>
                     {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
                     <li id="googlerating">Google Rating: {restData[ID]["rating"]}/5</li>
-                    <li id="covidrating"><i class="fas fa-virus"></i>Covid Rating: {averageRating[i]}/5</li>
+                    <li id="covidrating"><i className="fas fa-virus"></i>Covid Rating: {averageRating[i]}/5</li>
                 </ul>
                 </div>
             );
@@ -383,10 +659,9 @@ function RestaurantMap(props) {
             const aMarker = new window.google.maps.Marker({map:aMap, title :"aMarker", position: options["center"]})
             
         }
-        
         if (!window.google) {
             const script = document.createElement("script");
-            // script.src = "https://maps.googleapis.com/maps/api/js?key="
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBkkDS23eZ47JUq_oWSK7AKDoaNx1bf-QE"
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
@@ -416,7 +691,6 @@ function RestaurantMap(props) {
 }
 
 function ShowRatings(props) {
-    // const restaurantID = {"restID": props.restID};
     const [ratingsList, setRatingsList] = React.useState([]);
     const [dataLength, setDataLength] = React.useState(0);
     let [ratingsSum, setRatingsSum] = React.useState(0);
@@ -430,7 +704,7 @@ function ShowRatings(props) {
         })
         .then(response => response.json())
             .then(data => {
-                console.log(data);
+                console.log("ratings", data);
                 const ratings_array = [];
                 let i =0;
                 // setDataLength(data.length);
@@ -438,12 +712,25 @@ function ShowRatings(props) {
                 setDataLength(length)
                 let sumRate =0;
                 for (const rating of data) {
+                    console.log("rating", rating)
                     i=i+1; 
                     let outdoors;
+                    let codes;
+                    let sanitizer;
                     if (rating[1]["scores"][3] == true) {
                          outdoors = "Yes";
                     } else {
                          outdoors = "No";
+                    }
+                    if (rating[1]["scores"][4] == true) {
+                        codes = "Yes";
+                   } else {
+                        codes = "No";
+                   }
+                   if (rating[1]["scores"][5] == true) {
+                    sanitizer = "Yes";
+                    } else {
+                    sanitizer = "No";
                     }
                     sumRate += rating[1]["scores"][0] + rating[1]["scores"][1] + rating[1]["scores"][2];
                     setRatingsSum(sumRate/3)
@@ -451,9 +738,11 @@ function ShowRatings(props) {
                     <div key={i}>
                         <h5><i className="far fa-user">{rating[0]["user"][0]} {rating[0]["user"][1]}</i></h5>
                         <p>Cleanliness: {rating[1]["scores"][0]}/5</p>
-                        <p><i className="fas fa-head-side-mask">Use of Masks: {rating[1]["scores"][1]}/5</i></p>
+                        <p><i className="fas fa-head-side-mask">Requirement of Masks: {rating[1]["scores"][1]}/5</i></p>
                         <p>Social Distancing: {rating[1]["scores"][2]}/5 </p>
                         <p>Outdoor Seating: {outdoors} </p>
+                        <p>QR Codes to Access Menu: {codes}</p>
+                        <p>Hand Sanitizer Available: {sanitizer}</p>
                         <p>Comments: {rating[1]["scores"][4]}</p>
                     </div>
                     );
@@ -482,6 +771,8 @@ function WriteReview(props) {
     const [masks, setMasks] = React.useState("");
     const [distancing, setDistancing] = React.useState("");
     const [outdoors, setOutdoors] = React.useState();
+    const [codes, setCodes] = React.useState();
+    const [sanitizer, setSanitizer] = React.useState();
     const [comments, setComments] = React.useState("");
     const [posted, setPosted] = React.useState()
   
@@ -493,6 +784,8 @@ function WriteReview(props) {
                             "masksScore": masks,
                             "distancingScore": distancing,
                             "outdoorSeating": outdoors,
+                            "handSanitizer":sanitizer,
+                            "qrCodes":codes,
                             "comments": comments}  
         fetch('/api/create-rating', {
             method: 'POST',
@@ -539,7 +832,7 @@ function WriteReview(props) {
                 </div>
 
                 <div id = "distancing" value = {distancing} onChange = {e => setDistancing(e.target.value)}>
-                    Social Distancing Enforced:
+                    Social Distancing:
                     <select name="masks">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -552,6 +845,16 @@ function WriteReview(props) {
                     Outdoor seating:
                     <input type ="radio" name="outdoors" value = {true}/>Yes
                     <input type ="radio" name="outdoors" value = {false}/>No
+                </div>
+                <div id="codes" value = {codes} onChange = {e => setCodes(e.target.value)}>
+                    QR Codes to Access Menu:
+                    <input type ="radio" name="codes" value = {true}/>Yes
+                    <input type ="radio" name="codes" value = {false}/>No
+                </div>
+                <div id="sanitizer" value = {sanitizer} onChange = {e => setSanitizer(e.target.value)}>
+                    Hand Sanitizer Available:
+                    <input type ="radio" name="sanitizer" value = {true}/>Yes
+                    <input type ="radio" name="sanitizer" value = {false}/>No
                 </div>
 
                 <div id="comments" value = {comments} onChange = {e => setComments(e.target.value)}>
@@ -586,7 +889,7 @@ function MapView(props) {
 
         if (!window.google) {
             const script = document.createElement("script");
-            // script.src = "https://maps.googleapis.com/maps/api/js?key="
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBkkDS23eZ47JUq_oWSK7AKDoaNx1bf-QE"
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
@@ -605,7 +908,7 @@ function MapView(props) {
     })}
 
     return (
-        <div 
+        <div
             style={{ height: `120vh`, margin: `1em 0`, borderRadius: `0.5em` }}
             {...{ref}}>
         </div>
@@ -623,9 +926,16 @@ MapView.defaultProps = {
 
 function App() { 
     //make state in app set it to true
+    const history = ReactRouterDOM.useHistory();
+
     const handleLogout = () => {
-        localStorage.removeItem("userID");
-        alert("Logged out successfully");
+        if (!localStorage.getItem("userID")) {
+            alert("User not logged in")
+            history.push('/')
+        } else {
+            localStorage.removeItem("userID");
+            alert("Logged out successfully");
+        }
     }
     return (
         <Router>
@@ -633,9 +943,9 @@ function App() {
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="collapse navbar-collapse">
                         <ul className ="navbar-nav">
-                            <li>
-                                <img className = "logo" alt="logo" src={'/Users/erinleeds/src/faucis-feast/static/js/fauciLogo.jpg'}/>
-                            </li>
+                            {/* <li>
+                                <img className = "logo" alt="logo" src={'static/js/logo.png'}/>
+                            </li> */}
                             <li className="nav-item">
                                 <h4>Fauci's Feast</h4>
                             </li>
@@ -657,7 +967,7 @@ function App() {
                         </ul>
                     </div>
                 </nav>
-                <h1>Fauci's Feast</h1>
+                <h1><span><img id="big_logo" src={'static/js/logo.png'}/></span>Fauci's Feast</h1>
                 <h3>Rate your local restaurants on Covid-19 Readiness</h3>
                 <Switch>
                     <Route path="/signup">

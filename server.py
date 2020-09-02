@@ -56,7 +56,7 @@ def login():
        return jsonify("Incorrect password.")
     else:
         print(user.user_id)
-        return jsonify("success")
+        return jsonify(user.user_id)
 
 @app.route("/api/get_latlong", methods = ['POST'] ) 
 def get_lat_long():
@@ -100,7 +100,7 @@ def create_random_ratings(ID):
     for user in users:
         user_ids.append(user.user_id)
     for i in range(10):
-        crud.create_rating(choice(user_ids), ID, randint(1,5), randint(2,5), randint(2,5), choice(bools), choice(fake_reviews))
+        crud.create_rating(choice(user_ids), ID, randint(1,5), randint(2,5), randint(2,5), choice(bools), choice(bools), choice(bools), choice(fake_reviews))
     return jsonify("success")
 
 def get_covid_average(rest_ratings):
@@ -145,7 +145,7 @@ def get_ratings():
         scores_dict={}
         ratings_dict ={}
         print("First_name", rating.user.fname)
-        scores_dict["scores"] = [rating.cleanliness_score, rating.masks_score, rating.distancing_score, rating.outdoor_seating, rating.comments]
+        scores_dict["scores"] = [rating.cleanliness_score, rating.masks_score, rating.distancing_score, rating.outdoor_seating, rating.scan_codes, rating.hand_sanitizer, rating.comments]
         user_dict["user"] = [rating.user.fname, rating.user.lname]
         print("User dict", user_dict)
         print("scores dict", scores_dict)
@@ -156,13 +156,15 @@ def get_ratings():
 @app.route('/api/create-rating', methods = ['POST'])
 def user_created_rating():
     rating_info = request.get_json()
-    print(rating_info["outdoorSeating"])
+    print("rating info", rating_info)
     rating_created = crud.create_rating(rating_info["userID"], 
                        rating_info["restaurantID"],
                        int(rating_info["cleanlinessScore"]),
                        int(rating_info["masksScore"]),
                        int(rating_info["distancingScore"]),
                        bool(rating_info["outdoorSeating"].title()),
+                       bool(rating_info["handSanitizer"].title()),
+                       bool(rating_info["qrCodes"].title()),
                        rating_info["comments"],
                         )
     print(rating_created)
@@ -174,60 +176,3 @@ if __name__ == '__main__':
     connect_to_db(app)
     app.run(host='0.0.0.0', debug=True)
 
-
-#  @app.route('/api/rest-img', methods = ['POST'])
-# def get_photo():
-#     data = request.get_json()
-#     print(data)
-#     API_KEY = get_key()
-#     gmaps = googlemaps.Client(key = API_KEY)
-#     raw_image_data = gmaps.places_photo(photo_reference=data, max_height=400, max_width=400)
-#     print("raw", raw_image_data)
-#     f = open('static/js/myImage.jpg', 'wb')
-#     for chunk in raw_image_data:
-#         if chunk:
-#             f.write(chunk)
-#     f.close()
-
-#     return jsonify("static/js/myImage.jpg")
-    # im = Image.open("myImage.jpg")
-    # im.show()
-
-
-
-    # key = get_key()
-    # URL = "https://maps.googleapis.com/maps/api/place/photo"
-    # PARAMS = {'key':key,'photoreference': data, "maxwidth": 400}
-    # res = requests.get(url = URL, params = PARAMS)
-    
-    # return jsonify(res)
-    # data = request.get_json
-    # print("data here", data)
-    # photo_ref = data.photoRef
-    # print("PHOTO REF", photo_ref)
-    # API_KEY = get_key()
-    # gmaps = googlemaps.Client(key = API_KEY)
-    # raw_image_data = gmaps.places_photo(photo_reference=photo_ref, max_height=400, max_width=400)
-    # f = open("myImage.jpg", "wb")
-    # for chunk in raw_image_data:
-    #     if chunk:
-    #         f.write(chunk)
-    # f.close
-    # im = Image.open("myImage.jpg")
-    # im.show()
-
-    # return jsonify("hi")
-
-    # print("photo_ref", photo_ref)
-
-    # URL = "https://maps.googleapis.com/maps/api/place/photo"
-    # PARAMS = {'key':key,'photoreference': photo_ref, "maxwidth": 400}
-    # res = requests.get(url = URL, params = PARAMS)
-    # f = open('MyDownloadedImage.jpg', 'wb')
-    # for chunk in res:
-    #     if chunk:
-    #         f.write(res)
-    # f.close()
-
-    # im = Image.open('MyDownloadedImage.jpg')
-    # im.show()

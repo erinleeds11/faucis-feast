@@ -3,3 +3,20 @@
     overflow: scroll;
 
 }
+
+#legend {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    padding: 10px;
+    margin: 10px;
+    border: 3px solid #000;
+  }
+
+.logo {
+    height: 35px;
+  }
+
+#big_logo {
+    height: 100px;
+}
+

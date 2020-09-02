@@ -10,10 +10,10 @@ def create_user(fname, lname, email, password):
 
     return user
 
-def create_rating(user_id, restaurant_id, cleanliness_score, masks_score, distancing_score, outdoor_seating, comments):
+def create_rating(user_id, restaurant_id, cleanliness_score, masks_score, distancing_score, outdoor_seating, scan_codes, hand_sanitizer,comments):
 
     rating = Rating(user_id = user_id, restaurant_id=restaurant_id, cleanliness_score=cleanliness_score, masks_score=masks_score, 
-                    distancing_score = distancing_score, outdoor_seating =outdoor_seating, comments=comments)
+                    distancing_score = distancing_score, outdoor_seating =outdoor_seating, scan_codes=scan_codes, hand_sanitizer=hand_sanitizer, comments=comments)
 
     db.session.add(rating)
     db.session.commit()

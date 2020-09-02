@@ -34,6 +34,8 @@ class Rating(db.Model):
     masks_score = db.Column(db.Integer)
     distancing_score = db.Column(db.Integer)
     outdoor_seating = db.Column(db.Boolean)
+    scan_codes = db.Column(db.Boolean)
+    hand_sanitizer = db.Column(db.Boolean) 
     comments = db.Column(db.Text)
 
     user = db.relationship('User')
