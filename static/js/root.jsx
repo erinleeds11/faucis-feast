@@ -123,56 +123,17 @@ function Geocoder() {
     const [longitude, setLong] = React.useState(0);
     const arr = [
         {
-            "featureType": "administrative",
-            "elementType": "labels.text.fill",
-            "stylers": [
-                {
-                    "color": "#6195a0"
-                }
-            ]
-        },
-        {
-            "featureType": "administrative.province",
-            "elementType": "geometry.stroke",
-            "stylers": [
-                {
-                    "visibility": "off"
-                }
-            ]
-        },
-        {
             "featureType": "landscape",
             "elementType": "geometry",
             "stylers": [
                 {
-                    "lightness": "0"
-                },
-                {
-                    "saturation": "0"
-                },
-                {
-                    "color": "#f5f5f2"
-                },
-                {
-                    "gamma": "1"
+                    "saturation": "-100"
                 }
             ]
         },
         {
-            "featureType": "landscape.man_made",
-            "elementType": "all",
-            "stylers": [
-                {
-                    "lightness": "-3"
-                },
-                {
-                    "gamma": "1.00"
-                }
-            ]
-        },
-        {
-            "featureType": "landscape.natural.terrain",
-            "elementType": "all",
+            "featureType": "poi",
+            "elementType": "labels",
             "stylers": [
                 {
                     "visibility": "off"
@@ -181,82 +142,25 @@ function Geocoder() {
         },
         {
             "featureType": "poi",
-            "elementType": "all",
+            "elementType": "labels.text.stroke",
             "stylers": [
                 {
                     "visibility": "off"
-                }
-            ]
-        },
-        {
-            "featureType": "poi.park",
-            "elementType": "geometry.fill",
-            "stylers": [
-                {
-                    "color": "#bae5ce"
-                },
-                {
-                    "visibility": "on"
                 }
             ]
         },
         {
             "featureType": "road",
-            "elementType": "all",
-            "stylers": [
-                {
-                    "saturation": -100
-                },
-                {
-                    "lightness": 45
-                },
-                {
-                    "visibility": "simplified"
-                }
-            ]
-        },
-        {
-            "featureType": "road.highway",
-            "elementType": "all",
-            "stylers": [
-                {
-                    "visibility": "simplified"
-                }
-            ]
-        },
-        {
-            "featureType": "road.highway",
-            "elementType": "geometry.fill",
-            "stylers": [
-                {
-                    "color": "#fac9a9"
-                },
-                {
-                    "visibility": "simplified"
-                }
-            ]
-        },
-        {
-            "featureType": "road.highway",
             "elementType": "labels.text",
             "stylers": [
                 {
-                    "color": "#4e4e4e"
+                    "color": "#545454"
                 }
             ]
         },
         {
-            "featureType": "road.arterial",
-            "elementType": "labels.text.fill",
-            "stylers": [
-                {
-                    "color": "#787878"
-                }
-            ]
-        },
-        {
-            "featureType": "road.arterial",
-            "elementType": "labels.icon",
+            "featureType": "road",
+            "elementType": "labels.text.stroke",
             "stylers": [
                 {
                     "visibility": "off"
@@ -264,68 +168,77 @@ function Geocoder() {
             ]
         },
         {
-            "featureType": "transit",
-            "elementType": "all",
+            "featureType": "road.highway",
+            "elementType": "geometry.fill",
             "stylers": [
                 {
-                    "visibility": "simplified"
+                    "saturation": "-87"
+                },
+                {
+                    "lightness": "-40"
+                },
+                {
+                    "color": "#ffffff"
                 }
             ]
         },
         {
-            "featureType": "transit.station.airport",
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "color": "#f0f0f0"
+                },
+                {
+                    "saturation": "-22"
+                },
+                {
+                    "lightness": "-16"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway.controlled_access",
             "elementType": "labels.icon",
             "stylers": [
-                {
-                    "hue": "#0a00ff"
-                },
-                {
-                    "saturation": "-77"
-                },
-                {
-                    "gamma": "0.57"
-                },
-                {
-                    "lightness": "0"
-                }
-            ]
-        },
-        {
-            "featureType": "transit.station.rail",
-            "elementType": "labels.text.fill",
-            "stylers": [
-                {
-                    "color": "#43321e"
-                }
-            ]
-        },
-        {
-            "featureType": "transit.station.rail",
-            "elementType": "labels.icon",
-            "stylers": [
-                {
-                    "hue": "#ff6c00"
-                },
-                {
-                    "lightness": "4"
-                },
-                {
-                    "gamma": "0.75"
-                },
-                {
-                    "saturation": "-68"
-                }
-            ]
-        },
-        {
-            "featureType": "water",
-            "elementType": "all",
-            "stylers": [
-                {
-                    "color": "#eaf6f8"
-                },
                 {
                     "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "road.arterial",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road.local",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
                 }
             ]
         },
@@ -334,22 +247,13 @@ function Geocoder() {
             "elementType": "geometry.fill",
             "stylers": [
                 {
-                    "color": "#c7eced"
-                }
-            ]
-        },
-        {
-            "featureType": "water",
-            "elementType": "labels.text.fill",
-            "stylers": [
-                {
-                    "lightness": "-49"
+                    "saturation": "-52"
                 },
                 {
-                    "saturation": "-53"
+                    "hue": "#00e4ff"
                 },
                 {
-                    "gamma": "0.79"
+                    "lightness": "-16"
                 }
             ]
         }
@@ -562,12 +466,147 @@ function RestaurantDetails() {
     const [vicinity, setVicinity] = React.useState("");
     const [hours, setHours] = React.useState([]);
     const [googleRating, setGoogleRating] = React.useState(0);
-    const [passID, setPassID] = React.useState("")
     const [rateRest, setRateRest] = React.useState();
-    const [photo, setPhoto] = React.useState("");
     const [lat, setLat] = React.useState(0);
     const [lng, setLng] = React.useState(0);
     const [phone, setPhone] = React.useState();
+    const arr = [
+        {
+            "featureType": "landscape",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "saturation": "-100"
+                }
+            ]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "labels",
+            "stylers": [
+                {
+                    "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+                {
+                    "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "labels.text",
+            "stylers": [
+                {
+                    "color": "#545454"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "saturation": "-87"
+                },
+                {
+                    "lightness": "-40"
+                },
+                {
+                    "color": "#ffffff"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "color": "#f0f0f0"
+                },
+                {
+                    "saturation": "-22"
+                },
+                {
+                    "lightness": "-16"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "labels.icon",
+            "stylers": [
+                {
+                    "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "road.arterial",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road.local",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "saturation": "-52"
+                },
+                {
+                    "hue": "#00e4ff"
+                },
+                {
+                    "lightness": "-16"
+                }
+            ]
+        }
+    ];
 
     let { ID } = ReactRouterDOM.useParams();
     console.log(ID);
@@ -590,20 +629,13 @@ function RestaurantDetails() {
         setVicinity(data["vicinity"]);
         setHours(data["opening_hours"]["weekday_text"]);
         setGoogleRating(data["rating"])
-        setPhoto(data["photos"][0]["photo_reference"])
         setLat(data["geometry"]["location"]["lat"])
         setLng(data["geometry"]["location"]["lng"])
         setPhone(data["formatted_phone_number"])
         
 })
     }, [ID])
-// React.useEffect(()=> {
-//     if (map != undefined) {
-//         setMarker(new window.google.maps.Marker({map:map, position: {lat: lat, 
-//         lng:lng}}))
-//     }
-// },[lat])
-    // console.log("photo refernce", photo)
+
     if (rateRest === true ) {
     return (
         <div className = "restaurant_details">
@@ -614,7 +646,7 @@ function RestaurantDetails() {
             <p>Hours: {hours}</p>
             <p>Contact: {phone}</p>
             <p>Google Rating: {googleRating}/5</p>
-            <RestaurantMap map={map} marker={marker} setMarker={setMarker} setMap = {setMap} options={{center: {lat: lat, lng: lng}, zoom: 18}}/>
+            <RestaurantMap map={map} marker={marker} setMarker={setMarker} setMap = {setMap} options={{center: {lat: lat, lng: lng}, zoom: 15, styles:arr}}/>
             <button onClick  = {()=>{setRateRest(true)}}>Rate this restaurant</button>
             <WriteReview restaurantID = {ID}/>
             <button onClick = {()=>{setRateRest(false)}}>Back to reviews</button>
@@ -639,7 +671,7 @@ function RestaurantDetails() {
             </div>
             <p>Contact: {phone}</p>
             <p>Google Rating: {googleRating}/5</p>
-            <RestaurantMap map={map} setMap = {setMap} setMarker={setMarker} marker={marker} options={{center: {lat: lat, lng: lng}, zoom: 18}}/>
+            <RestaurantMap map={map} setMap = {setMap} setMarker={setMarker} marker={marker} options={{center: {lat: lat, lng: lng}, zoom: 15,styles:arr}}/>
             {/* <p>Covid Rating: {covidRating}</p> */}
             <button onClick  = {rateIt}>Rate this restaurant</button>
             <div className = "rest_ratings"><ShowRatings restID={ID}/></div>
@@ -653,10 +685,11 @@ function RestaurantMap(props) {
     const ref = React.useRef();
     const lat = props.options.center.lat;
     const lng = props.options.center.lng;
+    const image = "https://raw.githubusercontent.com/scottdejonge/map-icons/dbf6fd7caedd60d11b5bfb5f267a114a6847d012/src/icons/restaurant.svg"
     React.useEffect(()=> {
         const onLoad = () => {
             const aMap = new window.google.maps.Map(ref.current, options);
-            const aMarker = new window.google.maps.Marker({map:aMap, title :"aMarker", position: options["center"]})
+            const aMarker = new window.google.maps.Marker({map:aMap, title :"aMarker", position: options["center"], icon: image, animation: google.maps.Animation.DROP})
             
         }
         if (!window.google) {
@@ -684,7 +717,7 @@ function RestaurantMap(props) {
 
     return (
         <div className = "restaurantMap"
-            style={{ height: `60vh`, margin: `1em 0`, borderRadius: `0.5em` }}
+            style={{ height: `30vh`, width:'33%', margin: `1em 0`, borderRadius: `0.5em` }}
             {...{ref}}>
         </div>
     );
@@ -915,12 +948,6 @@ function MapView(props) {
     );
 }
 
-MapView.defaultProps = {
-    options: {
-        center: { lat: 48, lng: 8},
-        zoom:8,
-    },
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -941,7 +968,7 @@ function App() {
         <Router>
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <div className="collapse navbar-collapse">
+                    <div className="navbar-static-top collapse navbar-collapse">
                         <ul className ="navbar-nav">
                             {/* <li>
                                 <img className = "logo" alt="logo" src={'static/js/logo.png'}/>
@@ -967,7 +994,7 @@ function App() {
                         </ul>
                     </div>
                 </nav>
-                <h1><span><img id="big_logo" src={'static/js/logo.png'}/></span>Fauci's Feast</h1>
+                <h1 id="top"><span><img id="big_logo" src={'static/js/logo.png'}/></span>Fauci's Feast</h1>
                 <h3>Rate your local restaurants on Covid-19 Readiness</h3>
                 <Switch>
                     <Route path="/signup">
