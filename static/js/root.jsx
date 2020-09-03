@@ -9,8 +9,15 @@ const Redirect = ReactRouterDOM.Redirect;
  
 
 function Homepage() {
-    return <div>
-    </div>
+    const history = ReactRouterDOM.useHistory();
+    const redirectRest=()=> {
+        history.push('/restaurant-search');
+    }
+    return (<div>
+        <h2 id="top"><span><img id="big_logo" src={'static/images/logo.png'}/></span>Fauci's Feast</h2>
+        <h5>Rate your local restaurants on Covid-19 Readiness</h5>
+        <h6><button onClick = {redirectRest}>Find restaurants</button></h6>
+</div> );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -304,6 +311,7 @@ function Geocoder() {
     } else {
         return (
             <div className = "container-fluid">
+                <h4>Find local restaurants</h4>
                 <div className = "locationSearch">
                 Enter location <input id="enterLocation" type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
                 <button onClick = {getCoords}>Enter</button>
@@ -372,7 +380,6 @@ function Restaurants(props) {
       }, [props.lat, props.long]);
 
       React.useEffect(() => {
-        // const newObj = {};
         let index = 1;
         const rest_array = [];
         console.log(restData);
@@ -431,6 +438,7 @@ function Restaurants(props) {
         let i = 0;
         for (const ID in restData) {
             let iconColor = "red";
+            let avg = averageRating[i];
             // let googleRating = restData[ID]["rating"];
             if (averageRating[i] >= 3.5) {
                 iconColor="green";
@@ -440,11 +448,10 @@ function Restaurants(props) {
             const current_marker = new window.google.maps.Marker({map:props.map, position: {lat: restData[ID]["geometry"]["location"]["lat"], 
                 lng:restData[ID]["geometry"]["location"]["lng"]},
                 title: restData[ID]["name"],
-                link: "www.google.com",
                 label: index.toString(),
                 icon: {url: `http://maps.google.com/mapfiles/ms/icons/${iconColor}-dot.png`, scaledSize: new google.maps.Size(50, 50)}
             })
-            current_marker.addListener("click", () => {history.push(`/restaurants/${ID}`)});
+            current_marker.addListener("click", () => {history.push(`/restaurants/${ID}/${avg}`)});
             setMarkers(current_marker);
 
             index +=1;
@@ -705,7 +712,7 @@ function RestaurantMap(props) {
         }
         if (!window.google) {
             const script = document.createElement("script");
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBkkDS23eZ47JUq_oWSK7AKDoaNx1bf-QE"
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyATGismK6AdZmedHXcb_GtouW96ExBBwEI"
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
@@ -772,6 +779,7 @@ function ShowRatings(props) {
                     sanitizer = "No";
                     }
                     ratings_array.push(
+                    
                     <div key={i}>
                         <h5><i className="far fa-user">{rating[0]["user"][0]} {rating[0]["user"][1]}</i></h5>
                         <p>Cleanliness: {rating[1]["scores"][0]}/5</p>
@@ -933,7 +941,7 @@ function MapView(props) {
 
         if (!window.google) {
             const script = document.createElement("script");
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBkkDS23eZ47JUq_oWSK7AKDoaNx1bf-QE"
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyATGismK6AdZmedHXcb_GtouW96ExBBwEI"
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)
@@ -977,36 +985,36 @@ function App() {
     }
     return (
         <Router>
-            <div>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <div className="navbar-static-top collapse navbar-collapse">
-                        <ul className ="navbar-nav">
-                            {/* <li>
-                                <img className = "logo" alt="logo" src={'static/js/logo.png'}/>
-                            </li> */}
-                            <li className="nav-item">
-                                <h4>Fauci's Feast</h4>
+            <div className= "navbar-fixed">
+                <nav>
+                    <div className="nav-wrapper blue-grey lighten-3">
+    
+                            <a href="#" className="brand-logo">Fauci's Feast</a>
+                            <ul className ="right">
+                            <li>
+                                <Link  to="/" style={{textDecoration: "none"}}><i className="fas fa-home"></i></Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/"> Home </Link>
+                            <li>
+                                <Link  to="/restaurant-search" style={{textDecoration: "none"}}><i className="fas fa-search"></i></Link>
                             </li>
-                            <li className="nav-item"> 
-                                <Link className="nav-link" to="/signup"> Create Account </Link>
+                            <li > 
+                                <Link  to="/signup" style={{textDecoration: "none"}}> Create Account </Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/login"> Log in </Link>
+                            <li>
+                                <Link  to="/login" style={{textDecoration: "none"}}> Log in </Link>
                             </li>
                             {/* <li className="nav-item">
                                 <Link className="nav-link" to="/restaurant-search">Restaurant Search</Link>
                             </li> */}
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/" onClick ={handleLogout}>Logout</Link>
+                            <li>
+                                <Link  to="/" style={{textDecoration: "none"}} onClick ={handleLogout}>Logout</Link>
                             </li>
                         </ul>
                     </div>
+
                 </nav>
-                <h1 id="top"><span><img id="big_logo" src={'static/js/logo.png'}/></span>Fauci's Feast</h1>
-                <h3>Rate your local restaurants on Covid-19 Readiness</h3>
+            </div>
+            <div>
                 <Switch>
                     <Route path="/signup">
                         <CreateAccount/>
@@ -1020,8 +1028,10 @@ function App() {
                     <Route path="/restaurants/:ID/:covidRating">
                         <RestaurantDetails/>
                     </Route>
-                    <Route path="/">
+                    <Route path ="/restaurant-search">
                         <Geocoder/>
+                    </Route>
+                    <Route path="/">
                         <Homepage/>
                         
                     </Route>
