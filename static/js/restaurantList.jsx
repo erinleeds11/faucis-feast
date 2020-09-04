@@ -66,7 +66,7 @@ function Restaurants(props) {
             rest_array.push(
                 <div key = {i} className="row col">
                 <ul id="restList">
-                    <i className="fas fa-utensils"></i><button onClick = {()=>{history.push(`/restaurants/${ID}/${covid}`)}}><h3> {index}. Name: {restData[ID]["name"]}</h3></button>
+                    <i className="fas fa-utensils"></i><button onClick = {()=>{history.push(`/restaurants/${ID}/${covid}`)}}><h3> {index}. {restData[ID]["name"]}</h3></button>
                     <h5><StarRating rating = {covid}/></h5>
                     <li id="address">Address: {restData[ID]["vicinity"]}</li>
                     {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}

@@ -6,48 +6,6 @@ const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-function MapView(props) {
-    const options = props.options;
-    const ref = React.useRef();
-    React.useEffect(()=> {
-        const onLoad = () => {
-            props.setMap(new window.google.maps.Map(ref.current, options));
-        }
-
-        if (!window.google) {
-            const script = document.createElement("script");
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyATGismK6AdZmedHXcb_GtouW96ExBBwEI"
-            document.head.append(script);
-            script.addEventListener("load", onLoad)
-            return () => script.removeEventListener("load", onLoad)
-        } else {
-            onLoad();
-            // addMarkers(map, options["center"])
-        }
-
-        }, [props.options.center.lat, props.options.center.lng])
-
-    function addMarkers(map, coords) {
-        console.log("does this even get cllaed")
-        const marker = new window.google.maps.Marker({
-            map:map,
-            position: coords,
-    })}
-
-    return (
-        <div
-            style={{ height: `120vh`, margin: `1em 0`, borderRadius: `0.5em` }}
-            {...{ref}}>
-        </div>
-    );
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 function App() { 
     //make state in app set it to true
     const history = ReactRouterDOM.useHistory();

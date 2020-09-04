@@ -34,6 +34,8 @@ def create_user():
         lname = data['lname']
         email = data['email']
         password = data['password']
+    else:
+        return jsonify("invalid")
     if crud.get_user_by_email(email):
         return jsonify("account exists")
     else:
