@@ -29,11 +29,11 @@ def catch_all(path):
 def create_user():
     """Create User"""
     data = request.get_json()
-    print(data)
-    fname = data['fname']
-    lname = data['lname']
-    email = data['email']
-    password = data['password']
+    if data["fname"] and  data['lname'] and data['email'] and data['password']:
+        fname = data['fname']
+        lname = data['lname']
+        email = data['email']
+        password = data['password']
     if crud.get_user_by_email(email):
         return jsonify("account exists")
     else:
