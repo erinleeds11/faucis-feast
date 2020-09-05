@@ -5,7 +5,6 @@ const Prompt =  ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
 
-
 function App() { 
     //make state in app set it to true
     const history = ReactRouterDOM.useHistory();
@@ -23,9 +22,9 @@ function App() {
         <Router>
             <div className= "navbar-fixed">
                 <nav>
-                    <div className="nav-wrapper blue-grey lighten-3">
-    
-                            <a href="#" className="brand-logo">Fauci's Feast</a>
+                    <div className="nav-wrapper">
+                            {/* <img className = "logo-nav" src="static/images/logo.png"/> */}
+                            <a className="brand-logo">Fauci's Feast</a>
                             <ul className ="right">
                             <li>
                                 <Link  to="/" style={{textDecoration: "none"}}><i className="fas fa-home"></i></Link>

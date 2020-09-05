@@ -6,12 +6,35 @@ function Homepage() {
     const redirectRest=()=> {
         history.push('/restaurant-search');
     }
-    return (<div>
-        <h2 id="top"><span><img id="big_logo" src={'static/images/logo.png'}/></span>Fauci's Feast</h2>
-        <h5>Rate your local restaurants on Covid-19 Readiness</h5>
-        <h6><button onClick = {redirectRest}>Find restaurants</button></h6>
-</div> );
-}
+    $(document).ready(function(){
+        $('.carousel').carousel({
+            dist:0,
+            numVisible:6,
+            padding: .5,
+        })
+      });
+      
+
+    return (
+        <div>
+    <div className="carousel">
+            
+    <a className="carousel-item" ><img src="static/images/covid2.png"/></a>
+    <a className="carousel-item" ><img src="static/images/covid3.png"/></a>
+    <a className="carousel-item" ><img src="static/images/covid4.png"/></a>
+    <a className="carousel-item" ><img src="static/images/covid5.png"/></a>
+    <a className="carousel-item"><img src="static/images/covid6.png"/></a>
+    <a className="carousel-item" ><img src="static/images/covid8.png"/></a>
+  </div>
+  
+  <div className = "title">
+      <h5 id="top"><span><img id="big_logo" src={'static/images/logo.png'}/></span>Fauci's Feast</h5>
+      <h5>Rate your local restaurants on Covid-19 Readiness</h5>
+      <button className="waves-effect waves-light btn amber lighten-1" onClick = {redirectRest}>Find restaurants</button>
+  </div>
+
+        </div>);
+}       
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function CreateAccount(props) {

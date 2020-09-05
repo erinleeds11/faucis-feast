@@ -20,6 +20,10 @@
     height: 100px;
 }
 
+.logo-nav {
+    height: 60px;
+}
+
 .fa-star, .fa-star-half-alt {
     color:orange;
 }
@@ -36,4 +40,18 @@
 
 .create_account, .login {
     padding-top:50px;
+}
+
+.nav-wrapper {
+    background-color: #B6A19E;
+}
+
+button {
+    background: #FBA100;
+    border-radius: 30%;
+}
+
+.carousel 
+.carousel-item {
+    width: 500px;
 }
