@@ -3,7 +3,12 @@
     overflow: scroll;
 
 }
-
+body {
+    font-family: 'Assistant', sans-serif;
+}
+.shadow {
+    text-shadow: 2px 2px 4px #000000;
+}
 #legend {
     font-family: Arial, sans-serif;
     background: #fff;
@@ -13,7 +18,7 @@
   }
 
 .logo {
-    height: 35px;
+    height: 60px;
   }
 
 #big_logo {
@@ -43,15 +48,45 @@
 }
 
 .nav-wrapper {
-    background-color: #B6A19E;
+    background-color:#80cbc4 ;
 }
 
 button {
     background: #FBA100;
     border-radius: 30%;
 }
-
+.carousel {
+    padding-top: 0;
+}
 .carousel 
 .carousel-item {
     width: 500px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'PT Sans', sans-serif;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .bg-image {
+    background-image: url("https://images.unsplash.com/photo-1546195643-70f48f9c5b87?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80");
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.center {
+    text-align: center;
 }

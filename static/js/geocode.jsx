@@ -133,7 +133,7 @@ function Geocoder() {
                     "saturation": "-52"
                 },
                 {
-                    "hue": "#00e4ff"
+                    "hue": "#80cbc4"
                 },
                 {
                     "lightness": "-16"
@@ -160,11 +160,11 @@ function Geocoder() {
     }
     if ((latitude!==0) && (longitude!==0)) {
     return (
-            <div className = "container-fluid">
-                <div className = "locationSearch">
-                Enter location <input id="enterLocation" type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
-                <button onClick = {getCoords}>Enter</button>
+            <div className="container-fluid">
+                <div className = "locationSearch row">
+                Enter location <input id="enterLocation" type = "text" className = "col s7" value = {address} onChange = {e => setAddress(e.target.value)}></input>
                 </div>
+                <button onClick = {getCoords}>Enter</button>
                 <div>
                     <Legend />
                 </div>
@@ -186,19 +186,25 @@ function Geocoder() {
     } else {
         return (
             <div className = "container-fluid">
-                <h4>Find local restaurants</h4>
-                <div className = "locationSearch">
-                Enter location <input id="enterLocation" type = "text" value = {address} onChange = {e => setAddress(e.target.value)}></input>
-                <button onClick = {getCoords}>Enter</button>
+                <h4 className="center">Find Local Restaurants</h4>
+                <p className="center">Enter Location</p>
+                <div className = "location-search row">
+                <div className="col s2"/>
+                 <i class="fas fa-search-location style={{size: 6x}}"></i>
                 </div>
+                <input id="enterLocation" type = "text" className="col s6" value = {address} onChange = {e => setAddress(e.target.value)}></input>
+                <button onClick = {getCoords}>search</button>
+                <div className="col s3"/>
+                </div>
+    
                 <div className="row">
-                    <div className="col-7">
+                    <div className="col-s7">
                         <MapView map={map} 
                             options={{center: {lat: 37.8272, lng: -122.2913}, zoom: 7, styles:arr}}
                             setMap = {setMap}
                         />
                     </div>
-                    <div className="col-5">
+                    <div className="col-s5">
                     </div>
                 </div>
             </div>

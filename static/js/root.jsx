@@ -24,7 +24,8 @@ function App() {
                 <nav>
                     <div className="nav-wrapper">
                             {/* <img className = "logo-nav" src="static/images/logo.png"/> */}
-                            <a className="brand-logo">Fauci's Feast</a>
+                            <img className = "logo" src="static/images/logo.png"/>
+                            <a className=" shadow brand-logo">Fauci's Feast</a>
                             <ul className ="right">
                             <li>
                                 <Link  to="/" style={{textDecoration: "none"}}><i className="fas fa-home"></i></Link>

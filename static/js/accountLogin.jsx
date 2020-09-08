@@ -17,21 +17,26 @@ function Homepage() {
 
     return (
         <div>
+     <div className="title">
+        <div className = "title">
+        <h3>Fauci's Feast</h3>
+        <h5>Rate your local restaurants on COVID-19 Readiness</h5>
+        <button className="waves-effect waves-light btn amber lighten-1" onClick = {redirectRest}>Find restaurants</button>
+        </div>
+    </div>
+    
+    
     <div className="carousel">
             
-    <a className="carousel-item" ><img src="static/images/covid2.png"/></a>
+    <a className="carousel-item" ><img src="static/images/covid5.png"/></a>
     <a className="carousel-item" ><img src="static/images/covid3.png"/></a>
     <a className="carousel-item" ><img src="static/images/covid4.png"/></a>
-    <a className="carousel-item" ><img src="static/images/covid5.png"/></a>
+    <a className="carousel-item" ><img src="static/images/covid2.png"/></a>
     <a className="carousel-item"><img src="static/images/covid6.png"/></a>
     <a className="carousel-item" ><img src="static/images/covid8.png"/></a>
+
   </div>
   
-  <div className = "title">
-      <h5 id="top"><span><img id="big_logo" src={'static/images/logo.png'}/></span>Fauci's Feast</h5>
-      <h5>Rate your local restaurants on Covid-19 Readiness</h5>
-      <button className="waves-effect waves-light btn amber lighten-1" onClick = {redirectRest}>Find restaurants</button>
-  </div>
 
         </div>);
 }       
@@ -69,7 +74,7 @@ function CreateAccount(props) {
 }
     
     return (
-    <div className = " create_account row">
+    <div className = "create_account row">
         <div className="col s3"></div>
         <div className=" col s6">
             <h4><i class="medium material-icons">person</i>Create Account</h4>
@@ -91,7 +96,10 @@ function CreateAccount(props) {
     
         </div>
         <div className="col s3"></div>
-    </div>
+        </div>
+    
+    
+
     );
     
     }
