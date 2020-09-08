@@ -22,7 +22,7 @@ function MapView(props) {
 
     return (
         <div
-            style={{ height: `120vh`, margin: `1em 0`, borderRadius: `0.5em` }}
+            style={{ height: `90vh`, margin: `1em 0`, borderRadius: `0.5em` }}
             {...{ref}}>
         </div>
     );

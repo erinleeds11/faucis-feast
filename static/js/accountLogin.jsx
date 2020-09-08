@@ -19,15 +19,13 @@ function Homepage() {
         <div>
      <div className="title">
         <div className = "title">
-        <h3>Fauci's Feast</h3>
-        <h5>Rate your local restaurants on COVID-19 Readiness</h5>
-        <button className="waves-effect waves-light btn amber lighten-1" onClick = {redirectRest}>Find restaurants</button>
+        <h3 className="center padding">Fauci's Feast</h3>
+        <h5 className="center">Rate your local restaurants on COVID-19 Readiness</h5>
+        <button className="waves-effect waves-light btn amber lighten-1 center-button" onClick = {redirectRest}>Find restaurants</button>
         </div>
     </div>
     
-    
     <div className="carousel">
-            
     <a className="carousel-item" ><img src="static/images/covid5.png"/></a>
     <a className="carousel-item" ><img src="static/images/covid3.png"/></a>
     <a className="carousel-item" ><img src="static/images/covid4.png"/></a>

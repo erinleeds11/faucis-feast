@@ -169,13 +169,13 @@ function Geocoder() {
                     <Legend />
                 </div>
                 <div className="row">
-                    <div className="col-7">
+                    <div className="col-s7">
                         <MapView map={map} 
                             options={{center: {lat: latitude, lng: longitude}, zoom: 10, styles: arr}}
                             setMap = {setMap}
                         />
                     </div>
-                    <div className="col-5">
+                    <div className="col-s5">
                         <Restaurants  map={map}
                             lat={latitude} 
                             long={longitude}/>
@@ -185,29 +185,39 @@ function Geocoder() {
     );
     } else {
         return (
-            <div className = "container-fluid">
-                <h4 className="center">Find Local Restaurants</h4>
+            <div>
+            <div className="container-fluid">
+            <div>
+                <h4 className="center padding">Find Local Restaurants</h4>
                 <p className="center">Enter Location</p>
                 <div className = "location-search row">
-                <div className="col s2"/>
-                 <i class="fas fa-search-location style={{size: 6x}}"></i>
-                </div>
-                <input id="enterLocation" type = "text" className="col s6" value = {address} onChange = {e => setAddress(e.target.value)}></input>
-                <button onClick = {getCoords}>search</button>
                 <div className="col s3"/>
+                <div className ="col s1">
+                <i className="medium material-icons">location_on</i>
                 </div>
-    
-                <div className="row">
-                    <div className="col-s7">
+                <input id="enterLocation" type = "text" className="col s4" value = {address} onChange = {e => setAddress(e.target.value)}></input>
+                <button onClick = {getCoords}>search</button>
+                <div className="col s4"/>
+                </div>
+            </div>
+            </div>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className= "col s6 offset-s3"> 
                         <MapView map={map} 
                             options={{center: {lat: 37.8272, lng: -122.2913}, zoom: 7, styles:arr}}
                             setMap = {setMap}
                         />
+                        </div>
+                    <div>
+                    <Restaurants  map={map}
+                            lat={latitude} 
+                            long={longitude}/>
                     </div>
-                    <div className="col-s5">
                     </div>
                 </div>
-            </div>
+        </div>
+            
         )
     }
 
