@@ -160,43 +160,54 @@ function Geocoder() {
     }
     if ((latitude!==0) && (longitude!==0)) {
     return (
+        <div>
+        <div className="container-fluid">
+        <div>
+            <h4 className="center">Find Local Restaurants</h4>
+            <div className = "location-search row">
+            <div className="col s3"/>
+            <div className ="col s1">
+            </div>
+            <input placeholder="Enter location" id="enterLocation" type = "text" className="col s4" value = {address} onChange = {e => setAddress(e.target.value)}></input>
+            <button className = "btn waves-effect waves-light amber z-depth-3" onClick = {getCoords}>search</button>
+            <div className="col s4"/>
+            </div>
+            <div className="col s4">
+                <Legend />
+            </div>
+        </div>
+        </div>
             <div className="container-fluid">
-                <div className = "locationSearch row">
-                Enter location <input id="enterLocation" type = "text" className = "col s7" value = {address} onChange = {e => setAddress(e.target.value)}></input>
-                </div>
-                <button onClick = {getCoords}>Enter</button>
-                <div>
-                    <Legend />
-                </div>
                 <div className="row">
-                    <div className="col-s7">
-                        <MapView map={map} 
+                    <div className= "col s6"> 
+                    <MapView map={map} 
                             options={{center: {lat: latitude, lng: longitude}, zoom: 10, styles: arr}}
                             setMap = {setMap}
                         />
                     </div>
-                    <div className="col-s5">
-                        <Restaurants  map={map}
-                            lat={latitude} 
-                            long={longitude}/>
-                    </div>
+                <div>
+                <div className="col s6">
+                <Restaurants  map={map}
+                        lat={latitude} 
+                        long={longitude}/>
+                </div>
+                </div>
                 </div>
             </div>
+    </div>
+        
     );
+
     } else {
         return (
             <div>
             <div className="container-fluid">
             <div>
-                <h4 className="center padding">Find Local Restaurants</h4>
-                <p className="center">Enter Location</p>
+                <h4 className="center">Find Local Restaurants</h4>
                 <div className = "location-search row">
-                <div className="col s3"/>
-                <div className ="col s1">
-                <i className="medium material-icons">location_on</i>
-                </div>
-                <input id="enterLocation" type = "text" className="col s4" value = {address} onChange = {e => setAddress(e.target.value)}></input>
-                <button onClick = {getCoords}>search</button>
+                <div className="col s4"/>
+                <input placeholder="Enter location" id="enterLocation" type = "text" className = "col s3" value = {address} onChange = {e => setAddress(e.target.value)}></input>
+                <button className = "btn-small waves-effect waves-light amber z-depth-3 col s1" onClick = {getCoords}>search</button>
                 <div className="col s4"/>
                 </div>
             </div>
@@ -229,11 +240,15 @@ function Legend() {
     const red = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
 
     return (
-        <div id = "legend" className = "col-5">
-            Covid-19 Rating/5:
+        <div className="row">
+        <div className = "col s1"></div>
+        <div id = "legend" className = "col s4 center">
+            COVID-19 Rating/5:
             <span><img src={green}/></span>3.5-5
             <span><img src={yellow}/></span>3-3.49
             <span><img src={red}/></span>0-2.99
+        </div>
+        <div className="col s1"></div>
         </div>
     )
 }

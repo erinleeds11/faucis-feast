@@ -18,24 +18,21 @@ function Homepage() {
     return (
         <div>
      <div className="title">
-        <div className = "title">
         <h3 className="center padding">Fauci's Feast</h3>
-        <h5 className="center">Rate your local restaurants on COVID-19 Readiness</h5>
-        <button className="waves-effect waves-light btn amber lighten-1 center-button" onClick = {redirectRest}>Find restaurants</button>
-        </div>
+        <h5 className="center">Rate Your Local Restaurants on COVID-19 Readiness</h5>
+        <button className="waves-effect waves-light btn amber center-button z-depth-3" onClick = {redirectRest}>Find restaurants</button>
     </div>
-    
     <div className="carousel">
-    <a className="carousel-item" ><img src="static/images/covid5.png"/></a>
-    <a className="carousel-item" ><img src="static/images/covid3.png"/></a>
-    <a className="carousel-item" ><img src="static/images/covid4.png"/></a>
-    <a className="carousel-item" ><img src="static/images/covid2.png"/></a>
-    <a className="carousel-item"><img src="static/images/covid6.png"/></a>
-    <a className="carousel-item" ><img src="static/images/covid8.png"/></a>
+        
+        <a className="carousel-item" ><img src="static/images/covid5.png"/></a>
+        <a className="carousel-item" ><img src="static/images/covi13.png"/></a>
+        <a className="carousel-item" ><img src="static/images/covid8.png"/></a>
+        <a className="carousel-item" ><img src="static/images/covid4.png"/></a>
+        <a className="carousel-item" ><img src="static/images/covid2.png"/></a>
+        <a className="carousel-item"><img src="static/images/covid6.png"/></a>
+        <a className="carousel-item" ><img src="static/images/covid3.png"/></a>
 
   </div>
-  
-
         </div>);
 }       
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,33 +64,37 @@ function CreateAccount(props) {
                 } 
                 })
     } else {
-        alert("Invaled entry.")
+        alert("Invalid entry.")
     }
 }
     
     return (
-    <div className = "create_account row">
-        <div className="col s3"></div>
-        <div className=" col s6">
-            <h4><i class="medium material-icons">person</i>Create Account</h4>
+    <div className= "bg-image">
+    <div className =  "row ">
+        <div className="row padding"></div>
+        <div className="col s4"></div>
+        <div className="col s4 text-box">
+            <h4 className="center padding-btm-2"><i class="medium material-icons">person_add</i>    Create Account</h4>
             <div className = "firstName">
-                First Name: <input type = "text" name = "fname" value = {fname} onChange={e => setFirstName(e.target.value)}></input>
+                <p className="bold">First Name: <input type = "text" name = "fname" value = {fname} onChange={e => setFirstName(e.target.value)}></input></p>
             </div>
             <div className = "lastName">
-                Last Name: <input type = "text" name = "lname" value = {lname} onChange={e => setLastName(e.target.value)}></input>
+                <p className="bold">Last Name: <input type = "text" name = "lname" value = {lname} onChange={e => setLastName(e.target.value)}></input></p>
             </div>
             <div className = "email">
-                Email: <input type = "text" name = "email" value = {email} onChange={e => setEmail(e.target.value)}></input>
+                <p className="bold">Email: <input type = "text" name = "email" value = {email} onChange={e => setEmail(e.target.value)}></input></p>
             </div>
             <div className = "password">
-                Password: <input type = "password" name = "password" value = {password} onChange={e => setPassword(e.target.value)}></input>
+                <p className = "bold">Password: <input type = "password" name = "password" value = {password} onChange={e => setPassword(e.target.value)}></input></p>
             </div>
-            <button onClick = {makeUser} className="btn waves-effect waves-light" name="action">Submit
+            <button onClick = {makeUser} className="btn waves-effect waves-light center-button amber z-depth-3" name="action">Submit
             <i className="material-icons right">send</i>
             </button>
+            <div className="padding-btm"></div>
     
         </div>
-        <div className="col s3"></div>
+        <div className="col s4"></div>
+        </div>
         </div>
     
     
@@ -145,18 +146,23 @@ function Login() {
     }
 
     return (
-    <div className="login row">
-        <div className = "col s3"></div>
-        <div className ="col s6">
-        <h4>Log in</h4> 
-        <div>Email: <input type = "text" name = "email" value = {email} onChange={e => setLoginEmail(e.target.value)}></input></div>
-        <div>Password: <input type = "password" name = "password" value = {password} onChange={e => setLoginPassword(e.target.value)}></input></div>
-        <div class = "row">
-            <button className="btn waves-effect waves-light col s4" onClick = {userLogin}>Login</button>
-            <button className="btn waves-effect waves-light col s5 blue-grey lighten-3" onClick = {()=>{history.push('/restaurant-search')}}>Continue as guest</button>
+    <div className="bg-image">
+    <div className="row">
+        <div className="row padding-big"></div>
+        <div className = "col s4"></div>
+        <div className ="col s4 text-box">
+        <h4 className="center padding-btm underline"><i class="medium material-icons">person</i>   Login</h4> 
+        <div className="bold">Email: <input type = "text" name = "email" value = {email} onChange={e => setLoginEmail(e.target.value)}></input></div>
+        <div className="bold">Password: <input type = "password" name = "password" value = {password} onChange={e => setLoginPassword(e.target.value)}></input></div>
+        
+        <div className="container">
+            <div className="row"><button className="btn waves-effect waves-light center-button amber z-depth-3" onClick = {userLogin}>Login</button></div>
+            <div className="row center"><p></p></div>
+            <div className="row "><button className="btn waves-effect waves-light teal lighten-3 center-button z-depth-3" onClick = {()=>{history.push('/restaurant-search')}}>Continue as guest</button></div>
         </div>
         </div>
-        <div className = "col s3"></div>
+        <div className = "col s4"></div>
+    </div>
     </div>
    
     );

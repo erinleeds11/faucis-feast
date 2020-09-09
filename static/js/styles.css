@@ -3,18 +3,26 @@
     overflow: scroll;
 
 }
+.full-height{
+    height:100%;
+}
+.no {
+    background-image: none;
+}
 body {
     font-family: 'Assistant', sans-serif;
+    /* background-image: url("../images/covid5.png"); */
 }
 .shadow {
     text-shadow: 2px 2px 4px #000000;
 }
+
 #legend {
-    font-family: Arial, sans-serif;
     background: #fff;
     padding: 10px;
     margin: 10px;
-    border: 3px solid #000;
+    
+    border: .5px solid grey;
   }
 
 .logo {
@@ -30,7 +38,7 @@ body {
 }
 
 .fa-star, .fa-star-half-alt {
-    color:orange;
+    color:#ffc107;
 }
 
 #fauci_approved {
@@ -43,9 +51,6 @@ body {
     font-size:13pt;
 }
 
-.create_account, .login {
-    padding-top:50px;
-}
 
 .nav-wrapper {
     background-color:#80cbc4 ;
@@ -55,9 +60,7 @@ button {
     background: #FBA100;
     border-radius: 30%;
 }
-.carousel {
-    padding-top: 0;
-}
+
 .carousel 
 .carousel-item {
     width: 500px;
@@ -73,18 +76,10 @@ h1, h2, h3, h4, h5, h6 {
     transform: translate(-50%, -50%);
   }
   
-  .bg-image {
-    background-image: url("https://images.unsplash.com/photo-1546195643-70f48f9c5b87?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80");
-    filter: blur(8px);
-    -webkit-filter: blur(8px);
-  
-    /* Full height */
-    height: 100%;
-  
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
+ .bg-image{
+    background: url(../images/bg.png) no-repeat center center fixed;
     background-size: cover;
+    height: 100%;
 }
 
 .center {
@@ -98,7 +93,59 @@ size: 6x;
 .padding {
     padding-top: 20px;
 }
+.padding-btm {
+    padding-bottom: 20px;
+}
+.padding-btm-2 {
+    padding-bottom: 35px;
+}
+.padding-big {
+    padding-top: 90px;
+}
 .center-button {
     margin: 0 auto;
     display: block;
 }
+
+.create-account {
+    border: solid black;
+}
+
+.medium {
+    padding-right:10px;
+}
+
+
+.no-bg {
+    background-image: white ;
+    }
+
+.padding-right {
+    padding-left: 20px;
+}
+
+.padding-left {
+    padding-left: 30px;
+}
+
+.text-box {
+  
+  background-color: rgba(255,255,255, 0.8); /* Black w/opacity/see-through */
+  color: black;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 80%;
+  padding: 20px;
+  
+}
+
+.pad {
+    padding:30px
+}
+
+.bold {
+    font-weight: bolder;
+    font-size: large;
+}
+
