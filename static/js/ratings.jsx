@@ -20,6 +20,7 @@ function ShowRatings(props) {
                     let outdoors;
                     let codes;
                     let sanitizer;
+                    let avgCovid=  (rating[1]["scores"][0] + rating[1]["scores"][1] + rating[1]["scores"][2])/3
                     if (rating[1]["scores"][3] == true) {
                          outdoors = "Yes";
                     } else {
@@ -37,15 +38,24 @@ function ShowRatings(props) {
                     }
                     ratings_array.push(
                     <div key={i}>
-                        <h5><i className="far fa-user">{rating[0]["user"][0]} {rating[0]["user"][1]}</i></h5>
-                        <p>Cleanliness: {rating[1]["scores"][0]}/5</p>
-                        <p><i className="fas fa-head-side-mask">Requirement of Masks: {rating[1]["scores"][1]}/5</i></p>
-                        <p>Social Distancing: {rating[1]["scores"][2]}/5 </p>
-                        <p>Outdoor Seating: {outdoors} </p>
-                        <p>QR Codes to Access Menu: {codes}</p>
-                        <p>Hand Sanitizer Available: {sanitizer}</p>
-                        <p>Comments: {rating[1]["scores"][6]}</p>
+                        <div className="row">
+                            <h6 className="col s5"><span className="material-icons">person_outline</span>{rating[0]["user"][0]} {rating[0]["user"][1]}</h6>
+                            <h6 className="col s7" style={{paddingTop:"9px"}}><StarRating rating={avgCovid} type="rate"/></h6>
+
+                        </div>
+                            <div style={{fontSize:"large"}}>
+                            <p><span className="material-icons ">clean_hands</span>Cleanliness: {rating[1]["scores"][0]}/5</p>
+                            <p><span className="material-icons">masks</span>Requirement of Masks: {rating[1]["scores"][1]}/5</p>
+                            <p><span className="material-icons">6_ft_apart</span>Social Distancing: {rating[1]["scores"][2]}/5 </p>
+                            <p><span className="material-icons">deck</span>Outdoor Seating: {outdoors} </p>
+                            <p><span className="material-icons">qr_code_2</span>QR Codes to Access Menu: {codes}</p>
+                            <p><span className="material-icons">sanitizer</span>Hand Sanitizer Available: {sanitizer}</p>
+                            <p><span className="material-icons">chat</span>Comments: {rating[1]["scores"][6]}</p>
+
+                            <hr></hr>
+                        </div>
                     </div>
+                    
                     );
                 }
                 setRatingsList(ratings_array);
@@ -66,7 +76,7 @@ function ShowRatings(props) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function WriteReview(props) {
-    // const history = ReactRouterDOM.useHistory();
+
     const [cleanliness, setCleanliness] = React.useState("");
     const [masks, setMasks] = React.useState("");
     const [distancing, setDistancing] = React.useState("");
@@ -99,7 +109,8 @@ function WriteReview(props) {
         .then(data => {
             if (data === "success") {
                 alert("Posted")
-                setPosted(true)
+                setPosted(true);
+                props.setRateRest(false);
             }
         })
     }
@@ -111,10 +122,15 @@ function WriteReview(props) {
           });
     return (
             <div>
-            <h4>Write a review!</h4>
+            
             <div className = "row">
+            <h6 className ="center" style={{fontWeight: "bold"}}>Rate {props.name} on COVID-19 Readiness</h6>
+            <div className="col s4"/>
+            <div className="col s4">
             <form action="#" onSubmit = {handleSubmit}>
-                <div className= "col s4">
+                <div className="row">
+                <div className="col s6">
+                <div>
                     <div className="input-field" value = {cleanliness} onChange = {e => setCleanliness(e.target.value)}>
                         Cleanliness
                         <select>
@@ -127,8 +143,8 @@ function WriteReview(props) {
                         </select>
                     </div>
                 </div>
-                <div className= "col s4">
-                    <div  className="input-field s4" value = {masks} onChange = {e => setMasks(e.target.value)}>
+                <div>
+                    <div  className="input-field" value = {masks} onChange = {e => setMasks(e.target.value)}>
                         Masks:
                         <select className="masks">
                             <option value="" disabled selected>/5</option>
@@ -140,8 +156,8 @@ function WriteReview(props) {
                         </select>
                     </div>
                 </div>
-                <div className= "col s4">
-                    <div className="input-field s4" value = {distancing} onChange = {e => setDistancing(e.target.value)}>
+                <div>
+                    <div className="input-field" value = {distancing} onChange = {e => setDistancing(e.target.value)}>
                         Social Distancing:
                         <select >
                             <option value="" disabled selected>/5</option>
@@ -153,10 +169,13 @@ function WriteReview(props) {
                         </select>
                     </div>
                 </div>
+                </div>
+                <div className="col s1"></div>
+                <div className="col s5">
                 <div value = {outdoors} onChange = {e => setOutdoors(e.target.value)}>
-                    Outdoor seating:
+                    <p>Outdoor seating:</p>
                     <p>
-                        <label>
+                        <label style={{paddingRight:"15px"}}>
                         <input type ="radio" name="outdoors" value = {true}/>
                         <span>Yes</span>
                         </label>
@@ -170,7 +189,7 @@ function WriteReview(props) {
                 <div value = {codes} onChange = {e => setCodes(e.target.value)}>
                     QR Codes to Access Menu:
                     <p>
-                    <label>
+                    <label style={{paddingRight:"15px"}}>
                     <input type ="radio" name="codes" value = {true}/>
                     <span>Yes</span>
                     </label>
@@ -183,7 +202,7 @@ function WriteReview(props) {
                 <div value = {sanitizer} onChange = {e => setSanitizer(e.target.value)}>
                     Hand Sanitizer Available:
                     <p>
-                    <label>
+                    <label style={{paddingRight:"15px"}}>
                     <input type ="radio" name="sanitizer" value = {true}/>
                     <span>Yes</span>
                     </label>
@@ -193,15 +212,28 @@ function WriteReview(props) {
                     </label>
                     </p>
                 </div>
-
-                <div className="input-field" id="comments" value = {comments} onChange = {e => setComments(e.target.value)}>
-                    <p>Comments:</p>
-                    <input className = "textarea" type="textarea" name="comments"></input>
                 </div>
-            
-            <button type="submit">Post Rating</button>
-            
+                
+                <div className="row">
+                <div className=" input-field" style={{paddingTop:"0px"}} id="comments" value = {comments} onChange = {e => setComments(e.target.value)}>
+                    <p className="col s12" style={{margin:"0px"}}>Comments:</p>
+                    <input className = " col s12 textarea center" type="textarea" name="comments"></input>
+                </div>
+                </div>
+                </div>
+                
+            <div className="row">
+
+                <button className=" col s3 btn waves-effect waves-light center-button amber z-depth-4" onClick ={()=>{props.setRateRest(false)}}>Back</button>
+                <div className="col s2"></div>
+                <button className = " col s7 btn waves-effect waves-light center-button teal lighten-3 z-depth-3" type="submit">Post Rating</button>
+                
+            </div>
+
             </form>
+            
+            </div>
+            <div className="col s4"/>
 
         </div>
         </div>

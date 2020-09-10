@@ -1,5 +1,5 @@
 .rest_list {
-    height: 1200px;
+    height: 600px;
     overflow: scroll;
 
 }
@@ -26,7 +26,7 @@ body {
   }
 
 .logo {
-    height: 60px;
+    height: 70px;
   }
 
 #big_logo {
@@ -59,6 +59,7 @@ body {
 button {
     background: #FBA100;
     border-radius: 30%;
+    font-family: 'Assistant', sans-serif;
 }
 
 .carousel 
@@ -149,3 +150,32 @@ size: 6x;
     font-size: large;
 }
 
+a {
+    cursor: pointer;
+    color:black;
+}
+
+.rest-name {
+    color: black;
+}
+
+.center-content {
+    align-content: center;
+}
+
+.med {
+    font-size: ;
+}
+
+.hours {
+    border: 1px solid black;
+}
+
+#ratings {
+    height: 500px;
+    overflow: scroll;
+}
+
+hr {
+    border: 1px solid grey;
+}

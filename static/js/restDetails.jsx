@@ -152,7 +152,11 @@ function RestaurantDetails() {
     console.log(ID);
     console.log(covidRating);
     const rateIt =() => {
-        setRateRest(true);
+        if (localStorage.getItem("userId") !== undefined) { 
+            setRateRest(true);
+        } else {
+            alert("Login to rate this restaurant")
+        }
     }
     React.useEffect(()=> {
     fetch(`/api/restaurants/${ID}`, {
@@ -178,50 +182,67 @@ function RestaurantDetails() {
     }, [ID])
 
     if (rateRest === true ) {
-    return (
-        <div className = "restaurant_details">
-            <h1 id = "rest_name">{name}</h1>
-            {/* <Photo photoRef = {photo}/> */}
-            <p>Website: {website}</p>
-            <p>Address: {vicinity}</p>
-            <p>Hours: {hours}</p>
-            <p>Contact: {phone}</p>
-            <p>Google Rating: {googleRating}/5</p>
-            {/* <p>COVID19 Readiness Rating {covidRating}/5</p> */}
-            <StarRating rating = {covidRating}/>
-            <RestaurantMap map={map} marker={marker} setMarker={setMarker} setMap = {setMap} options={{center: {lat: lat, lng: lng}, zoom: 15, styles:arr}}/>
-            <button onClick  = {()=>{setRateRest(true)}}>Rate this restaurant</button>
-            <WriteReview restaurantID = {ID}/>
-            <button onClick = {()=>{setRateRest(false)}}>Back to reviews</button>
-        
-        </div>
-    );
+        return (
+            <div className = "restaurant_details">
+                <h3 className ="center" id = "rest_name">{name}</h3>
+                <h6 className="center"><StarRating rating = {covidRating} type="list"/></h6>
+                <hr></hr>
+                <div className="row">
+                    <div >
+                        <WriteReview setRateRest = {setRateRest} name = {name} restaurantID = {ID}/>                </div>
+                </div>
+                </div>
+            
+            );
+    
     } else {
     return (
         <div className = "restaurant_details">
-            <h1 id = "rest_name">{name}</h1>
-            {/* <Photo photoRef = {photo}/> */}
-            <p>Website: {website}</p>
-            <p>Address: {vicinity}</p>
-            <div>Hours:
-                <p>{hours[0]}</p>
-                <p>{hours[1]}</p>
-                <p>{hours[2]}</p>
-                <p>{hours[3]}</p>
-                <p>{hours[4]}</p>
-                <p>{hours[5]}</p>
-                <p>{hours[6]}</p>
+            <h3 className ="center" id = "rest_name">{name}</h3>
+            <div className="row" style={{marginBottom:"0px"}}>
+                <div className="col s3"/>
+                <div className="col s6">
+            <div className="row" style={{marginBottom:"0px"}}>
+            <h6 className="center col s8"><StarRating rating = {covidRating} type="list"/></h6>
+            <button style={{padding:"0px"}} className ="col s4 btn waves-effect waves-light center-button teal lighten-3 z-depth-3" onClick = {rateIt}>Rate {name}</button>
             </div>
-            <p>Contact: {phone}</p>
-            <p>Google Rating: {googleRating}/5</p>
-            {/* <p>COVID19 Readiness Rating {covidRating}/5</p> */}
-            <StarRating rating = {covidRating}/>
-            <RestaurantMap map={map} setMap = {setMap} setMarker={setMarker} marker={marker} options={{center: {lat: lat, lng: lng}, zoom: 15,styles:arr}}/>
-            {/* <p>Covid Rating: {covidRating}</p> */}
-            <button onClick  = {rateIt}>Rate this restaurant</button>
-            <div className = "rest_ratings"><ShowRatings restID={ID}/></div>
+            </div>
+            <div className="col s3"/>
+            </div>
+            <hr style={{margin:"0px"}}></hr>
+            <div className="row" style={{fontSize:"large"}}>
+                <div className="col s4">
+                    <div>
+
+                    <a href={website}><span class="material-icons">link</span>Website</a>
+                    <p><span class="material-icons">phone</span>{phone}</p>
+                    </div>
+                    <div className ="hours center"><h6><span class="material-icons">access_time</span>Hours</h6>
+                        <p>{hours[0]}</p>
+                        <p>{hours[1]}</p>
+                        <p>{hours[2]}</p>
+                        <p>{hours[3]}</p>
+                        <p>{hours[4]}</p>
+                        <p>{hours[5]}</p>
+                        <p>{hours[6]}</p>
+                    </div>
+                </div>
+                <div className="col s4">
+                    <p className="center"><span class="material-icons">location_on</span>{vicinity}</p>
+                    <RestaurantMap map={map} setMap = {setMap} setMarker={setMarker} marker={marker} options={{center: {lat: lat, lng: lng}, zoom: 15,styles:arr}}/>
+                </div>
+
+                <div className = "rest_ratings col s4">
+                <h5 className ="center"style={{fontWeight: "bolder"}}> Reviews</h5>
+                    <div id="ratings">
+                        <ShowRatings restID={ID}/>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
         
-        </div>);
+        );
     }
 }
 
@@ -264,7 +285,7 @@ function RestaurantMap(props) {
 
     return (
         <div className = "restaurantMap"
-            style={{ height: `30vh`, width:'33%', margin: `1em 0`, borderRadius: `0.5em` }}
+            style={{ height: `60vh`, width:'100%', margin: `1em 0`, borderRadius: `0.5em` }}
             {...{ref}}>
         </div>
     );

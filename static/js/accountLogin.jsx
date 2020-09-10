@@ -11,9 +11,10 @@ function Homepage() {
             dist:0,
             numVisible:6,
             padding: .5,
+            indicators:true,
         })
       });
-      
+ 
 
     return (
         <div>
@@ -23,7 +24,6 @@ function Homepage() {
         <button className="waves-effect waves-light btn amber center-button z-depth-3" onClick = {redirectRest}>Find restaurants</button>
     </div>
     <div className="carousel">
-        
         <a className="carousel-item" ><img src="static/images/covid5.png"/></a>
         <a className="carousel-item" ><img src="static/images/covi13.png"/></a>
         <a className="carousel-item" ><img src="static/images/covid8.png"/></a>
@@ -151,7 +151,7 @@ function Login() {
         <div className="row padding-big"></div>
         <div className = "col s4"></div>
         <div className ="col s4 text-box">
-        <h4 className="center padding-btm underline"><i class="medium material-icons">person</i>   Login</h4> 
+        <h4 className="center padding-btm"><i class="medium material-icons">person</i>   Login</h4> 
         <div className="bold">Email: <input type = "text" name = "email" value = {email} onChange={e => setLoginEmail(e.target.value)}></input></div>
         <div className="bold">Password: <input type = "password" name = "password" value = {password} onChange={e => setLoginPassword(e.target.value)}></input></div>
         

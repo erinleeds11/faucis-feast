@@ -179,10 +179,10 @@ function Geocoder() {
         </div>
             <div className="container-fluid">
                 <div className="row">
-                    <div className= "col s6"> 
+                    <div className= "col s6" style={{paddingLeft:"50px"}}> 
                     <MapView map={map} 
                             options={{center: {lat: latitude, lng: longitude}, zoom: 10, styles: arr}}
-                            setMap = {setMap}
+                            setMap = {setMap} size="bigger"
                         />
                     </div>
                 <div>
@@ -217,7 +217,7 @@ function Geocoder() {
                         <div className= "col s6 offset-s3"> 
                         <MapView map={map} 
                             options={{center: {lat: 37.8272, lng: -122.2913}, zoom: 7, styles:arr}}
-                            setMap = {setMap}
+                            setMap = {setMap} 
                         />
                         </div>
                     <div>
@@ -240,9 +240,9 @@ function Legend() {
     const red = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
 
     return (
-        <div className="row">
+        <div className="row" style={{margin:"0px"}}>
         <div className = "col s1"></div>
-        <div id = "legend" className = "col s4 center">
+        <div id = "legend" className = "col s4 center" style={{margin:"0px"}}>
             COVID-19 Rating/5:
             <span><img src={green}/></span>3.5-5
             <span><img src={yellow}/></span>3-3.49

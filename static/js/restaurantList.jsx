@@ -7,7 +7,9 @@ function Restaurants(props) {
     const [googleRating, setGoogleRating] = React.useState(0);
     const [averageRating, setAverageRating] = React.useState([]);
     const [IDs, setIDs] = React.useState([]);
-
+    $(document).ready(function(){
+            $('.tooltipped').tooltip();
+          });
     React.useEffect(() => 
     { fetch('/api/get-restaurants', {
             method: 'POST',
@@ -66,8 +68,8 @@ function Restaurants(props) {
             rest_array.push(
                 <div key = {i} className="row col">
                 <ul id="restList">
-                    <i className="fas fa-utensils"></i><button onClick = {()=>{history.push(`/restaurants/${ID}/${covid}`)}}><h3> {index}. {restData[ID]["name"]}</h3></button>
-                    <h5><StarRating rating = {covid}/></h5>
+                    <a onClick = {()=>{history.push(`/restaurants/${ID}/${covid}`)}}><h4 className ="rest-name"><span><i className="material-icons med tooltip" data-position="top" data-tooltip="Click for ratings">restaurant</i></span> {index}. {restData[ID]["name"]}</h4></a> 
+                    <li><h6><span><StarRating rating = {covid} type="list"/></span></h6></li>
                     <li id="address">Address: {restData[ID]["vicinity"]}</li>
                     {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
                     <li id="googlerating">Google Rating: {restData[ID]["rating"]}/5</li>
