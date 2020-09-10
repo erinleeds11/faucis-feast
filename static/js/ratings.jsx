@@ -242,7 +242,9 @@ function WriteReview(props) {
 } else if (posted === true){
     return <div></div>
 } else {
-    alert("User not logged in")
+    alert("User not logged in");
+    props.setRateRest(false);
+
     return <div/>
 }
 }

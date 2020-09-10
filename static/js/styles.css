@@ -163,16 +163,14 @@ a {
     align-content: center;
 }
 
-.med {
-    font-size: ;
-}
+
 
 .hours {
     border: 1px solid black;
 }
 
 #ratings {
-    height: 500px;
+    height: 450px;
     overflow: scroll;
 }
 

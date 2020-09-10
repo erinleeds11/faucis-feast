@@ -10,6 +10,9 @@ function RestaurantDetails() {
     const [lat, setLat] = React.useState(0);
     const [lng, setLng] = React.useState(0);
     const [phone, setPhone] = React.useState();
+    $(document).ready(function(){
+        $('.collapsible').collapsible();
+      });
     const arr = [
         {
             "featureType": "landscape",

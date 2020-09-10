@@ -4,6 +4,7 @@ function Geocoder() {
     const [address, setAddress] = React.useState("");
     const [latitude, setLat] = React.useState(0);
     const [longitude, setLong] = React.useState(0);
+    const [restaurants, setRestaurants] = React.useState();
     const arr = [
         {
             "featureType": "landscape",
@@ -158,7 +159,7 @@ function Geocoder() {
                 setLong(data["results"][0]["geometry"]["location"]["lng"]);                 
         }})
     }
-    if ((latitude!==0) && (longitude!==0)) {
+    if ((latitude!==0) && (longitude!==0) && (restaurants === true)) {
     return (
         <div>
         <div className="container-fluid">
@@ -187,9 +188,9 @@ function Geocoder() {
                     </div>
                 <div>
                 <div className="col s6">
-                <Restaurants  map={map}
+                    <Restaurants  map={map}
                         lat={latitude} 
-                        long={longitude}/>
+                        long={longitude} setRestaurants={setRestaurants}/>
                 </div>
                 </div>
                 </div>
@@ -198,6 +199,45 @@ function Geocoder() {
         
     );
 
+    } else if ((latitude!==0) && (longitude!==0) && (restaurants !== true)) {
+        return (
+            <div>
+            <div className="container-fluid">
+            <div>
+                <h4 className="center">Find Local Restaurants</h4>
+                <div className = "location-search row">
+                <div className="col s3"/>
+                <div className ="col s1">
+                </div>
+                <input placeholder="Enter location" id="enterLocation" type = "text" className="col s4" value = {address} onChange = {e => setAddress(e.target.value)}></input>
+                <button className = "btn waves-effect waves-light amber z-depth-3" onClick = {getCoords}>search</button>
+                <div className="col s4"/>
+                </div>
+                <div className="col s4">
+                    <Legend />
+                </div>
+            </div>
+            </div>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className= "col s6" style={{paddingLeft:"50px"}}> 
+                        <MapView map={map} 
+                                options={{center: {lat: latitude, lng: longitude}, zoom: 10, styles: arr}}
+                                setMap = {setMap} size="bigger"
+                            />
+                        </div>
+                    <div>
+                    <div className="col s6">
+                        <Restaurants  map={map}
+                            lat={latitude} 
+                            long={longitude} setRestaurants={setRestaurants}/>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+        </div>
+            
+        );
     } else {
         return (
             <div>

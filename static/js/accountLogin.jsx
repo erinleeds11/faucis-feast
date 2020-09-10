@@ -18,12 +18,13 @@ function Homepage() {
 
     return (
         <div>
-     <div className="title">
+    <div className="container-fluid">
+     <div className="title col s12">
         <h3 className="center padding">Fauci's Feast</h3>
         <h5 className="center">Rate Your Local Restaurants on COVID-19 Readiness</h5>
         <button className="waves-effect waves-light btn amber center-button z-depth-3" onClick = {redirectRest}>Find restaurants</button>
     </div>
-    <div className="carousel">
+    <div className="carousel col s12 ">
         <a className="carousel-item" ><img src="static/images/covid5.png"/></a>
         <a className="carousel-item" ><img src="static/images/covi13.png"/></a>
         <a className="carousel-item" ><img src="static/images/covid8.png"/></a>
@@ -33,6 +34,7 @@ function Homepage() {
         <a className="carousel-item" ><img src="static/images/covid3.png"/></a>
 
   </div>
+        </div>
         </div>);
 }       
 ////////////////////////////////////////////////////////////////////////////////////////////////////
