@@ -35,7 +35,7 @@ is initialized using jQuery.
 
 ![alt text](https://github.com/erinleeds11/faucis-feast/blob/master/static/images/homepage.png "homepage")
 
-#### Create an Account/Log in
+#### Create an account/Log in
 A user can create an account, login, or continue as a guest. However, a user must be logged in to rate restaurants. This feature is handled by SQLAlchemy ORM database queries.
 
 ![alt text](https://github.com/erinleeds11/faucis-feast/blob/master/static/images/logincreateaccount.gif "create account")
