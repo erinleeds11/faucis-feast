@@ -18,11 +18,8 @@ body {
 }
 
 #legend {
-    background: #fff;
-    padding: 10px;
-    margin: 10px;
-    
-    border: .5px solid grey;
+    background: #fff;  
+   
   }
 
 .logo {
@@ -176,4 +173,8 @@ a {
 
 hr {
     border: 1px solid grey;
+}
+
+.thin {
+    border: .5px solid #80cbc4;
 }

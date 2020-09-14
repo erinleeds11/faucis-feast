@@ -265,7 +265,7 @@ function RestaurantMap(props) {
         }
         if (!window.google) {
             const script = document.createElement("script");
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyATGismK6AdZmedHXcb_GtouW96ExBBwEI"
+            script.src = "https://maps.googleapis.com/maps/api/js?key="
             document.head.append(script);
             script.addEventListener("load", onLoad)
             return () => script.removeEventListener("load", onLoad)

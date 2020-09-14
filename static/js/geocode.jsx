@@ -172,8 +172,8 @@ function Geocoder() {
             <input placeholder="Enter location" id="enterLocation" type = "text" className="col s4" value = {address} onChange = {e => setAddress(e.target.value)}></input>
             <button className = "btn waves-effect waves-light amber z-depth-3" onClick = {getCoords}>search</button>
             <div className="col s4"/>
-            </div>
-            <div className="col s4">
+            </div>     
+            <div className="col s12">
                 <Legend />
             </div>
         </div>
@@ -212,9 +212,6 @@ function Geocoder() {
                 <input placeholder="Enter location" id="enterLocation" type = "text" className="col s4" value = {address} onChange = {e => setAddress(e.target.value)}></input>
                 <button className = "btn waves-effect waves-light amber z-depth-3" onClick = {getCoords}>search</button>
                 <div className="col s4"/>
-                </div>
-                <div className="col s4">
-                    <Legend />
                 </div>
             </div>
             </div>
@@ -281,14 +278,15 @@ function Legend() {
 
     return (
         <div className="row" style={{margin:"0px"}}>
-        <div className = "col s1"></div>
+        <div className = "col s4"></div>
         <div id = "legend" className = "col s4 center" style={{margin:"0px"}}>
-            COVID-19 Rating/5:
+        <span className="fas fa-star checked"></span>/5:
             <span><img src={green}/></span>3.5-5
             <span><img src={yellow}/></span>3-3.49
             <span><img src={red}/></span>0-2.99
+            <hr className="thin"></hr>
         </div>
-        <div className="col s1"></div>
+        <div className="col s4"></div>
         </div>
     )
 }

@@ -104,9 +104,9 @@ def create_random_ratings(ID):
     for i in range(10):
         integer = randint(1,2)
         if integer == 1:
-            crud.create_rating(choice(user_ids), ID, randint(1,5), randint(1,5), randint(1,5), choice(bools), choice(bools), choice(bools), choice(fake_reviews))
+            crud.create_rating(choice(user_ids), ID, randint(1,4), randint(1,5), randint(1,3), choice(bools), choice(bools), choice(bools), choice(fake_reviews))
         else:
-             crud.create_rating(choice(user_ids), ID, randint(3,5), randint(3,5), randint(2,5), choice(bools), choice(bools), choice(bools), choice(fake_reviews))
+             crud.create_rating(choice(user_ids), ID, randint(3,5), randint(4,5), randint(3,5), choice(bools), choice(bools), choice(bools), choice(fake_reviews))
     return jsonify("success")
 
 def get_covid_average(rest_ratings):

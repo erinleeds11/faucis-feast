@@ -59,16 +59,24 @@ function Restaurants(props) {
 
     React.useEffect(()=> {
     if (averageRating.length > 0) {
+        props.setRestaurants(true);
         console.log(averageRating);
         let i = 0;
         const rest_array =[]
         let index = 1;
         for (const ID in restData) {
             let covid = averageRating[i];
+            let iconColor = "red";
+            if (covid >= 3.5) {
+                iconColor="green";
+            } else if (covid >=3) {
+                iconColor="yellow";
+            }
+            let source = `http://maps.google.com/mapfiles/ms/icons/${iconColor}-dot.png`
             rest_array.push(
                 <div key = {i} className="row col">
                 <ul id="restList">
-                    <a onClick = {()=>{history.push(`/restaurants/${ID}/${covid}`)}}><h4 className ="rest-name"><span><i className="material-icons med tooltip" data-position="top" data-tooltip="Click for ratings">restaurant</i></span> {index}. {restData[ID]["name"]}</h4></a> 
+                    <a onClick = {()=>{history.push(`/restaurants/${ID}/${covid}`)}}><h4 className ="rest-name"><span><img src={source}/></span> {index}. {restData[ID]["name"]}</h4></a> 
                     <li><h6><span><StarRating rating = {covid} type="list"/></span></h6></li>
                     <li id="address">Address: {restData[ID]["vicinity"]}</li>
                     {/* <li id="website">Website: <span><a href = {data[ID]["website"]}/></span></li> */}
