@@ -8,7 +8,7 @@ import os
 import requests
 
 
-API_KEY = API_KEY = os.environ['GOOGLE_KEY']
+API_KEY=os.environ['GOOGLE_KEY']
 # loop through each of the places in the results, and get the place details.    
 def get_restaurants_by_latlong(lat = 37.7749 , long=-122.4194):  
     #37.7749, -122.4194
