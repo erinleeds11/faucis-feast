@@ -6,7 +6,6 @@ import requests
 from restaurant_info import get_restaurants_by_latlong, get_restaurant_by_id
 from jinja2 import StrictUndefined
 import json
-from get_key import get_key
 from random import choice, randint
 from faker import Faker
 from PIL import Image
@@ -68,7 +67,7 @@ def get_lat_long():
     address = data['address']
     print(type(address))
     print("Address", address)
-    key = get_key()
+    key = API_KEY
     URL = "https://maps.googleapis.com/maps/api/geocode/json"
     PARAMS = {'key':key,'address': address, 'region':'us'} #add bounds
     if data:
