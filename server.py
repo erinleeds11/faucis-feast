@@ -60,6 +60,13 @@ def login():
         print(user.user_id)
         return jsonify(user.user_id)
 
+@app.route("/api/get-key", methods = ['GET'])
+def get_api_key():
+    "get a key"
+    key = get_key()
+    return jsonify(key)
+
+
 @app.route("/api/get_latlong", methods = ['POST'] ) 
 def get_lat_long():
     data = request.get_json()
