@@ -1,4 +1,4 @@
-# <img src="https://github.com/mearajennifer/jobtracker/blob/master/static/img/JobTracker-nobg2.png" width="40%" alt="JobTracker">
+# <img src="https://github.com/erinleeds11/faucis-feast/blob/master/static/images/headerFauci.png" width="40%" alt="Fauci'sFeast">
 During these uncertain times, going out to eat makes life seem a bit normal again, but there is still a health risk in doing this
 Inspired by the Coronavirus pandemic and my blind, but deep trust in apps such as Rotten Tomatoes and Yelp, I  wanted to create an app that is  both relevant and useful during these times.
 
@@ -6,7 +6,7 @@ Inspired by the Coronavirus pandemic and my blind, but deep trust in apps such a
 Erin recently graduated from Georgetown University in May with a degree in Biology and a minor in Psychology. She completed an equivalent of a senior thesis studying the effects of climate change on an endangered butterfly species in a research lab. She started to use R to analyze my data and enjoyed the coding aspect of her research more than the Biology itself. She took more computer science class her senior year which gave her the idea to complete a bootcamp after graduation. Recently, Erin moved to Oakland and has been participating and thoroughly enjoying Hackbright Academy's bootcamp. She is looking forward to starting a career in engineering.
 
 ## Contents
-* [Tech Stack](#tech-stack)
+* [Technologies](#tech-stack)
 * [APIs](#apis)
 * [Features](#features)
 
@@ -35,7 +35,7 @@ is initialized using jQuery.
 
 ![alt text](https://github.com/erinleeds11/faucis-feast/blob/master/static/images/homepage.png "homepage")
 
-#### Create an Account/Log in
+#### Create an account/Log in
 A user can create an account, login, or continue as a guest. However, a user must be logged in to rate restaurants. This feature is handled by SQLAlchemy ORM database queries.
 
 ![alt text](https://github.com/erinleeds11/faucis-feast/blob/master/static/images/logincreateaccount.gif "create account")
