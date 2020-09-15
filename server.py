@@ -8,7 +8,6 @@ from jinja2 import StrictUndefined
 import json
 from random import choice, randint
 from faker import Faker
-from PIL import Image
 import googlemaps
 API_KEY = os.environ['GOOGLE_KEY']
 app = Flask(__name__)
