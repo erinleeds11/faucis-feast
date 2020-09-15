@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash, session, redirect, jsonify
 from model import connect_to_db, User, Rating
 import crud
+import os
 import requests
 from restaurant_info import get_restaurants_by_latlong, get_restaurant_by_id
 from jinja2 import StrictUndefined
@@ -10,7 +11,7 @@ from random import choice, randint
 from faker import Faker
 from PIL import Image
 import googlemaps
-
+API_KEY = os.environ['GOOGLE_KEY']
 app = Flask(__name__)
 app.secret_key = "abc"
 app.jinja_env.undefined = StrictUndefined
@@ -62,9 +63,7 @@ def login():
 
 @app.route("/api/get-key", methods = ['GET'])
 def get_api_key():
-    "get a key"
-    key = get_key()
-    return jsonify(key)
+    return jsonify(API_KEY)
 
 
 @app.route("/api/get_latlong", methods = ['POST'] ) 
