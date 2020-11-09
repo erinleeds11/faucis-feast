@@ -1,9 +1,5 @@
-#pip install googlemaps
-#pip install prettyprint
 
 import googlemaps
-import pprint
-import time
 import os
 import requests
 
